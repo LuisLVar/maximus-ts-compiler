@@ -1,0 +1,76 @@
+<!-- Navigation -->
+<header class="navbar navbar-expand navbar-dark bg-dark fixed-top flex-md-row ">
+    <div class="container">
+        <a class="navbar-brand" routerLink="inicio">
+            <img src="https://image.freepik.com/vector-gratis/diseno-casco-espartano_23-2147976626.jpg" style="width: 30px; height: 30px;" class="rounded-circle">
+            <span> MaximusTS</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/consola"><i class="fas fa-id-badge"></i> Consola</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/reportes"><i class="fas fa-mobile-alt"></i> Reportes</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<br><br><br>
+
+
+<div class="container p-4">
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-secondary shadow p-3 mb-5 rounded">
+                <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+                    Traductor C3D
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <ngx-codemirror [(ngModel)]="salida.traduccion" [options]="{
+                                    lineNumbers: true,
+                                    theme: 'abcdef',
+                                    mode: 'javascript'
+                                  }"></ngx-codemirror>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="button" class="btn btn-outline-primary mr-1" (click)="ejecutarCodigo()">Ejecutar</button>
+                    <button type="button" class="btn btn-outline-primary" (click)="limpiarTraduccion()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-primary shadow p-3 mb-5 rounded">
+                <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+                    C3D
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <ngx-codemirror [(ngModel)]="salida.consola" [options]="{
+                                    lineNumbers: false,
+                                    theme: 'colorforth',
+                                    mode: 'javascript',
+                                    readOnly: 'nocursor'
+                                  }"></ngx-codemirror>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="button" class="btn btn-outline-primary" (click)="limpiarConsola()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

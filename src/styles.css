@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import '~codemirror/lib/codemirror';
+@import '~codemirror/theme/colorforth';
+@import '~codemirror/theme/3024-night';
+@import '~codemirror/theme/vibrant-ink';
+@import '~codemirror/theme/blackboard';
+@import '~codemirror/theme/night';
+@import '~codemirror/theme/abcdef';

@@ -3,14 +3,22 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ConsolaComponent } from './components/consola/consola.component';
+import { ReportesComponent } from './components/reportes/reportes.component';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ConsolaComponent,
+    ReportesComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CodemirrorModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
