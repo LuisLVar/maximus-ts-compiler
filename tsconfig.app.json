@@ -7,7 +7,34 @@
   },
   "files": [
     "src/main.ts",
-    "src/polyfills.ts"
+    "src/polyfills.ts",
+    //Errores
+    "src/Analizador/Error/Error.ts",
+    "src/Analizador/Error/Errores.ts",
+
+    //Abstractos
+    "src/Analizador/Abstractos/Expresion.ts",
+    "src/Analizador/Abstractos/Instruccion.ts",
+    "src/Analizador/Abstractos/Tipo.ts",
+
+    //AST
+    "src/Analizador/AST/Contador.ts",
+    "src/Analizador/AST/Nodo.ts",
+
+    //Simbolos
+    "src/Analizador/Simbolo/Entorno.ts",
+    "src/Analizador/Simbolo/Simbolo.ts",
+
+    //Expresiones
+    "src/Analizador/Expresion/Basicas/Aritmetica.ts",
+    "src/Analizador/Expresion/Literales/Literal.ts",
+    "src/Analizador/Expresion/Literales/Variable.ts",
+    "src/Analizador/Expresion/NoBinaria/Unario.ts",
+    "src/Analizador/Expresion/Basicas/Relacional.ts",
+    "src/Analizador/Expresion/Basicas/Logica.ts",
+    "src/Analizador/Expresion/NoBinaria/Ternario.ts",
+    //Instrucciones
+    "src/Analizador/Instrucciones/Funciones/Print.ts",
   ],
   "include": [
     "src/**/*.d.ts"

@@ -1,1 +1,141 @@
-<p>reportes works!</p>
+<!-- Navigation -->
+<header class="navbar navbar-expand navbar-dark bg-dark fixed-top flex-md-row ">
+    <div class="container">
+        <a class="navbar-brand" routerLink="inicio">
+            <img src="https://image.freepik.com/vector-gratis/diseno-casco-espartano_23-2147976626.jpg" style="width: 30px; height: 30px;" class="rounded-circle">
+            <span> MaximusTS</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/consola"><i class="fas fa-id-badge"></i> Consola</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/reportes"><i class="fas fa-mobile-alt"></i> Reportes</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<br><br><br>
+
+<div class="container p-4">
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-primary">
+                <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+                    Tabla de Simbolos
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-hover table-primary" *ngFor="let tabla of listaTS">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Ambito</th>
+                                        <th scope="col">Fila</th>
+                                        <th scope="col">Columna</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <tr *ngFor="let simbolo of tabla;let i=index">
+                                            <th scope="row">{{i+1}}</th>
+                                            <td>{{simbolo.nombre}}</td>
+                                            <td>{{simbolo.tipo}}</td>
+                                            <td>{{simbolo.ambito}}</td>
+                                            <td>{{simbolo.linea.linea}}</td>
+                                            <td>{{simbolo.linea.columna}}</td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-primary">
+                <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+                    AST
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 AST" id="idAST">
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="button" class="btn btn-outline-primary mr-1" (click)="imprimirAST()">Generar AST</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-primary">
+                <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+                    AST
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ngx-codemirror [(ngModel)]="grafica" [options]="{
+                                lineNumbers: true,
+                                theme: 'colorforth',
+                                mode: 'javascript'
+                              }"></ngx-codemirror>
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="button" class="btn btn-outline-primary mr-1" (click)="imprimirAST()">Generar AST</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-primary">
+                <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+                    Reporte de Errores
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-hover table-primary">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Descripcion</th>
+                                        <th scope="col">Linea</th>
+                                        <th scope="col">Columna</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let error of listaErrores;let i=index">
+                                        <th scope="row">{{i+1}}</th>
+                                        <td>{{error.tipo}}</td>
+                                        <td>{{error.mensaje}}</td>
+                                        <td>{{error.linea}}</td>
+                                        <td>{{error.columna}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
