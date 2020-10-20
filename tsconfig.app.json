@@ -15,7 +15,7 @@
     //Abstractos
     "src/Analizador/Abstractos/Expresion.ts",
     "src/Analizador/Abstractos/Instruccion.ts",
-    "src/Analizador/Abstractos/Tipo.ts",
+    "src/Analizador/Utils/Tipo.ts",
 
     //AST
     "src/Analizador/AST/Contador.ts",

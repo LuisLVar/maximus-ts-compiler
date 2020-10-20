@@ -1,5 +1,6 @@
 import { Expresion } from "../../Abstractos/Expresion";
-import { Retorno, Tipo } from "../../Abstractos/Tipo";
+import { Tipo } from "../../Utils/Tipo";
+import { Retorno } from "../../Utils/Retorno";
 import { Entorno } from "../../Simbolo/Entorno";
 import { Error_ } from "../../Error/Error";
 
@@ -26,6 +27,6 @@ export class Logica extends Expresion {
 
     }
     console.log("Entro en el que no deberia");
-    return { value: false, tipo: Tipo.BOOLEAN }
+    return result;
   }
 }

@@ -1,14 +1,11 @@
-import { Tipo } from "../Abstractos/Tipo"
+import { Tipo } from "../Utils/Tipo"
 import { tipoDeclaracion } from "../Instrucciones/Variables/Declaracion";
 
 export class Simbolo { 
 
-  constructor(public value: any, private id: string, private tipo: any, private tipoVariable: tipoDeclaracion, private linea: number, private columna: number) { 
+  constructor(private id: string, private tipo: any, private tipoVariable: tipoDeclaracion, private posRelativa: number,
+    private heap: boolean, private linea, private column) { 
 
-  }
-
-  getValor() { 
-    return this.value;
   }
 
   getID() { 
@@ -19,16 +16,25 @@ export class Simbolo {
     return this.tipo;
   }
 
+  getTipoVariable() { 
+    return this.tipoVariable;
+  }
+
+  getPosRelativa() {
+    return this.posRelativa;
+  }
+
+  isHeap() { 
+    return this.heap;
+  }
+
   getLinea() { 
     return this.linea;
   }
 
-
   getColumna() { 
-    return this.columna;
+    return this.column;
   }
 
-  getTipoVariable() { 
-    return this.tipoVariable;
-  }
+  
 }

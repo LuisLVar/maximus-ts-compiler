@@ -1,4 +1,4 @@
-import { Expresion } from "./Expresion";
+import { Expresion } from "../Abstractos/Expresion";
 
 export enum Tipo {
     NUMBER = 0,
@@ -37,22 +37,19 @@ export const tipoDominante = [
     ]
 ];
 
-export type Retorno = {
-    value: any;
-    tipo: Tipo;
-    dim?: number;
-}
+export class Type{
+    tipo : Tipo;
+    typeName : string;
+    struct : null;
 
-export type AsignacionType = {
-    id: string;
-    id2: string;
-    tipo: Tipo;
-    indice?: Expresion;
-}
+    constructor(tipo: Tipo, typeName: string = '', struct : null = null){
+        this.tipo = tipo;
+        this.typeName = typeName;
+        this.struct = struct;
+    }
 
-export type AsignacionArray = {
-    id: string;
-    indice: Expresion;
-    tipo: any;
-    id2?: string;
+    getTipo() { 
+        return this.tipo;
+    }
+
 }

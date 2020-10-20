@@ -1,29 +1,28 @@
 import { Expresion } from "../../Abstractos/Expresion";
-import { Retorno, Tipo } from "../../Abstractos/Tipo";
+import { Tipo, Type } from "../../Utils/Tipo";
+import { Retorno } from "../../Utils/Retorno";
 
 
 export class Literal extends Expresion{
     
-    constructor(private value : any, linea : number, columna: number, private tipo : any){
+    constructor(private value : any, linea : number, columna: number, private tipo : Tipo){
         super(linea, columna);
     }
 
-    public traducir() : Retorno{
-        if (this.tipo == Tipo.NUMBER) { 
-
+    public traducir(): Retorno{
+        let result: Retorno;
+        if (this.tipo == Tipo.BOOLEAN) { 
+            // return { tmp: this.value, tipo: Tipo.NUMBER }
         }
-        else if (this.tipo == Tipo.BOOLEAN) { 
-
+        else if (this.tipo == Tipo.STRING) { 
+            // return { tmp: this.value, tipo: Tipo.BOOLEAN }
         }
-        else if (this.tipo == Tipo.ARRAY) {
-
-        }
-        else if (this.tipo == 6) { //TIPO VOID PARA FUNCIONES
-            return { value: this.value, tipo: Tipo.VOID }
+        else if (this.tipo == Tipo.NULL) {
+            // return { tmp: this.value, tipo: Tipo.NULL }
         }
         else {
-            // this.value.replace(/['"]+/g, '');
-            return { value: this.value.replace(/["]+/g, '').replace(/[']+/g, ''), tipo: Tipo.STRING };
+            return new Retorno(this.value, false, new Type(this.tipo));
         }
+        return result;
     }
 }

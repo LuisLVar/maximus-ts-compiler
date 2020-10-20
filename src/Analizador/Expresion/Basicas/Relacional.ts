@@ -1,7 +1,8 @@
 import { Expresion } from "../../Abstractos/Expresion";
-import { Retorno, Tipo } from "../../Abstractos/Tipo";
+import { Tipo } from "../../Utils/Tipo";
 import { Entorno } from "../../Simbolo/Entorno";
 import { Error_ } from "../../Error/Error";
+import { Retorno } from "../../Utils/Retorno";
 
 
 export enum tipoRelacional {
@@ -22,6 +23,7 @@ export class Relacional extends Expresion {
   public traducir(entorno: Entorno): Retorno {
     const leftValue = this.left.traducir(entorno);
     const rightValue = this.right.traducir(entorno);
+    let result: Retorno;
     if (this.tipo == tipoRelacional.IGUALIGUAL) {
 
     }
@@ -40,6 +42,6 @@ export class Relacional extends Expresion {
     else if (this.tipo == tipoRelacional.MENORIGUAL) {
 
     }
-    return { value: -1, tipo: Tipo.NUMBER }
+    return result;
   }
 }

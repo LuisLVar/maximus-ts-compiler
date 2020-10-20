@@ -1,5 +1,6 @@
-import { Retorno, Tipo, tipoDominante } from "./Tipo";
+import { Tipo, tipoDominante } from "../Utils/Tipo";
 import { Entorno } from "../Simbolo/Entorno";
+import { Retorno } from "..//Utils/Retorno";
 
 export abstract class Expresion {
   

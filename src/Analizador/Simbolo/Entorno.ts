@@ -1,5 +1,5 @@
 import { Simbolo } from "./Simbolo";
-import { Tipo } from "../Abstractos/Tipo";
+import { Tipo } from "../Utils/Tipo";
 import { env } from "process";
 import { Error_ } from "../Error/Error";
 // import { Funcion } from "../Instrucciones/Funcion";
@@ -37,25 +37,11 @@ export class Entorno {
   }
 
   public asignarVariable(id: string, valor: any, tipo: any, linea: number, columna: number) {
-    let entorno: Entorno | null = this;
-    while (entorno != null) {
-      if (entorno.variables.has(id)) {
-        entorno.variables.set(id, new Simbolo(valor, id, tipo, 1, linea, columna));
-        return;
-      }
-      entorno = entorno.anterior;
-    }
-    throw new Error_(linea, columna, 'Semántico', "Error en asignacion: variable " + id + " no ha sido declarada.");
+
   }
 
   public declararVariable(id: string, valor: any, tipo: any, tipoVariable: tipoDeclaracion, linea: number, columna: number) {
-    let entorno: Entorno | null = this;
-    if (entorno != null) {
-      if (entorno.variables.has(id)) {
-        throw new Error_(linea, columna, 'Semántico', "Error en declaracion: variable " + id + " ya ha sido declarada.");
-      }
-    }
-    this.variables.set(id, new Simbolo(valor, id, tipo, tipoVariable, linea, columna));
+
   }
 
   public getVariable(id: string) {

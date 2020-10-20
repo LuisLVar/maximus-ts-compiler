@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <hr>
-                    <button type="button" class="btn btn-outline-primary mr-1" (click)="traducirCodigo()">Ejecutar</button>
+                    <button type="button" class="btn btn-outline-primary mr-1" (click)="traducirCodigo()">Compilar</button>
                     <button type="button" class="btn btn-outline-primary" (click)="limpiarEntrada()">Clear</button>
                 </div>
             </div>
@@ -58,11 +58,10 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <div class="col-md-12">
-                                <ngx-codemirror [(ngModel)]="console.traduccion" [options]="{
-                                    lineNumbers: false,
+                                <ngx-codemirror [(ngModel)]="console.salida" [options]="{
+                                    lineNumbers: true,
                                     theme: 'colorforth',
-                                    mode: 'javascript',
-                                    readOnly: 'nocursor'
+                                    mode: 'javascript'
                                   }"></ngx-codemirror>
                             </div>
                         </div>

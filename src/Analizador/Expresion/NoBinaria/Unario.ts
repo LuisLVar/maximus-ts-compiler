@@ -1,7 +1,8 @@
 import { Expresion } from "../../Abstractos/Expresion";
-import { Retorno, Tipo } from "../../Abstractos/Tipo";
+import { Tipo } from "../../Utils/Tipo";
 import { Entorno } from "../../Simbolo/Entorno";
 import { Error_ } from "../../Error/Error";
+import { Retorno } from "../../Utils/Retorno";
 
 
 export enum tipoUnario {
@@ -21,7 +22,7 @@ export class Unario extends Expresion {
   public traducir(entorno: Entorno): Retorno {
     const valor = this.unario.traducir(entorno);
     let result: Retorno;
-    const tipoDominante = this.getDominante(valor.tipo, valor.tipo);
+    const tipoDominante = this.getDominante(valor.getTipo(), valor.getTipo());
     if (this.tipo == tipoUnario.UMAS) {
 
     }
@@ -38,7 +39,7 @@ export class Unario extends Expresion {
 
     }
     else { 
-      result = { value: ("Error: "+ valor.value.toString()), tipo: Tipo.STRING };
+      
     }
     return result;
   }

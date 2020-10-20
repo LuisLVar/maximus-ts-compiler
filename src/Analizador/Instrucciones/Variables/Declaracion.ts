@@ -1,7 +1,8 @@
 import { Instruccion } from "../../Abstractos/Instruccion";
 import { Entorno } from "../../Simbolo/Entorno";
 import { Expresion } from "../../Abstractos/Expresion";
-import { Retorno, Tipo } from "../../Abstractos/Tipo";
+import { Tipo } from "../../Utils/Tipo";
+import { Retorno } from "../../Utils/Retorno";
 import { Error_ } from "../../Error/Error";
 
 

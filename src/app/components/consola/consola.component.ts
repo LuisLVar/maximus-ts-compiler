@@ -4,7 +4,9 @@ import { errores } from '../../../Analizador/Error/Errores';
 import { Error_ } from 'src/Analizador/Error/Error';
 import { Instruccion } from 'src/Analizador/Abstractos/Instruccion';
 import { Entorno } from 'src/Analizador/Simbolo/Entorno';
-import { Tipo } from 'src/Analizador/Abstractos/Tipo';
+import { Tipo } from 'src/Analizador/Utils/Tipo';
+
+import { Generador } from 'src/Analizador/Generador/Generador';
 
 // Ejecucion
 import Parser from '../../../Analizador/Gramatica/gramatica';
@@ -38,28 +40,17 @@ export class ConsolaComponent implements OnInit {
       for (let instruccion of ast) {
         try {
           if (instruccion instanceof Instruccion) {
-            const retorno = instruccion.traducir(global);
-            this.console = consolaGlobal;
-            if (retorno != null || retorno != undefined) {
-              if (retorno.tipo == Tipo.BREAK) {
-                throw new Error_(instruccion.getLinea(), instruccion.getColumna(), "Semántico",
-                  "BreakError: La clausula 'break' unicamente puede ser utilizada en ciclos o Switch");
-              }
-              else if (retorno.tipo == Tipo.CONTINUE) {
-                throw new Error_(instruccion.getLinea(), instruccion.getColumna(), "Semántico",
-                  "ContinueError: La clausula 'continue' unicamente puede ser utilizada en ciclos.");
-              }
-            }
+            instruccion.traducir(global);
           }
         } catch (error) {
           console.log(error);
           errores.push(error);
         }
       }
-      let re = /\\n/gi;
-      this.console.salida = this.console.salida.replace(re, "\n");
-      re = /\\t/gi;
-      this.console.salida = this.console.salida.replace(re, "\t");
+
+      let code = Generador.getInstance().getCode();
+      consolaGlobal.salida = code;
+      
 
     } catch (error) {
       console.log(error);

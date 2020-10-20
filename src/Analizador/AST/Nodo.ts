@@ -1,4 +1,4 @@
-import { Tipo } from "../Abstractos/Tipo"
+import { Tipo } from "../Utils/Tipo"
 import { contador } from "./Contador"
 
 export class Nodo { 
