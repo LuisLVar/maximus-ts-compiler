@@ -15,6 +15,11 @@ export class Variable extends Expresion{
         if (value == null) {
             throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "La variable '" + this.id + "' no ha sido declarada.");
         }
+
+        
+
+
+
         return result;
     }
 }

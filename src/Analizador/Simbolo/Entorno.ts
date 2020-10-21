@@ -1,10 +1,12 @@
 import { Simbolo } from "./Simbolo";
-import { Tipo } from "../Utils/Tipo";
+import { Tipo, tipoDominante, Type } from "../Utils/Tipo";
 import { env } from "process";
 import { Error_ } from "../Error/Error";
 // import { Funcion } from "../Instrucciones/Funcion";
 // import { Type } from "../Instrucciones/Type";
 import { tipoDeclaracion } from "../Instrucciones/Variables/Declaracion";
+import { Generador } from '../Generador/Generador';
+import { Retorno } from '../Utils/Retorno';
 
 
 export class Entorno {
@@ -13,11 +15,14 @@ export class Entorno {
   // private funciones: Map<string, Funcion>
   // private types: Map<string, Type>
 
+  size: number;
+
   constructor(anterior: Entorno | null) {
     this.variables = new Map();
     this.anterior = anterior;
     // this.funciones = new Map();
     // this.types = new Map();
+    this.size = anterior?.size || 0;
   }
 
   public getVariables() {
@@ -40,8 +45,24 @@ export class Entorno {
 
   }
 
-  public declararVariable(id: string, valor: any, tipo: any, tipoVariable: tipoDeclaracion, linea: number, columna: number) {
+  public declararVariable(id: string, valor: Retorno, tipoType: Type, tipoVariable: tipoDeclaracion, linea: number, columna: number) {
+    let entorno: Entorno | null = this;
+    if (entorno != null) {
+      if (entorno.variables.has(id)) {
+        throw new Error_(linea, columna, 'Semántico', "Error en declaracion: variable " + id + " ya ha sido declarada.");
+      }
+    }
 
+    let tipo = tipoType.tipo;
+
+    if (tipo == Tipo.BOOLEAN || tipo == Tipo.NUMBER) { 
+      
+      this.variables.set(id, new Simbolo(id, tipoType, tipoVariable, this.size++, false, linea, columna));
+      let generador = Generador.getInstance();
+      generador.declararVariable(valor, this.size-1);
+    } else {
+
+    }
   }
 
   public getVariable(id: string) {

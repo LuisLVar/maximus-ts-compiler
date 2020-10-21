@@ -34,35 +34,43 @@ export class Aritmetica extends Expresion {
       if (tipoDominante == Tipo.NUMBER) { 
         this.resolverNullBoolean(leftValue, rightValue);
         generador.addExpresion(tmp, leftValue.getValor(), '+', rightValue.getValor());
-        result = new Retorno(tmp, true, new Type(tipoDominante));
+        result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
       }
     }
     else if (this.tipo == tipoAritmetica.MENOS) {
-      if (tipoDominante == Tipo.NUMBER) { 
+      if (tipoDominante == Tipo.NUMBER) {
         this.resolverNullBoolean(leftValue, rightValue);
         generador.addExpresion(tmp, leftValue.getValor(), '-', rightValue.getValor());
-        result = new Retorno(tmp, true, new Type(tipoDominante));
+        result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
+      } else { 
+        throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede restar: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
       }
     }
     else if (this.tipo == tipoAritmetica.POR) {
-      if (tipoDominante == Tipo.NUMBER) { 
+      if (tipoDominante == Tipo.NUMBER) {
         this.resolverNullBoolean(leftValue, rightValue);
         generador.addExpresion(tmp, leftValue.getValor(), '*', rightValue.getValor());
-        result = new Retorno(tmp, true, new Type(tipoDominante));
+        result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
+      } else { 
+        throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede multiplicar: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
       }
     }
     else if (this.tipo == tipoAritmetica.DIV) {
-      if (tipoDominante == Tipo.NUMBER) { 
+      if (tipoDominante == Tipo.NUMBER) {
         this.resolverNullBoolean(leftValue, rightValue);
         generador.addExpresion(tmp, leftValue.getValor(), '/', rightValue.getValor());
-        result = new Retorno(tmp, true, new Type(tipoDominante));
+        result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
+      } else { 
+        throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede dividir: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
       }
     }
     else if (this.tipo == tipoAritmetica.MOD) {
-      if (tipoDominante == Tipo.NUMBER) { 
+      if (tipoDominante == Tipo.NUMBER) {
         this.resolverNullBoolean(leftValue, rightValue);
         generador.addExpresion(tmp, leftValue.getValor(), '%', rightValue.getValor());
-        result = new Retorno(tmp, true, new Type(tipoDominante));
+        result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
+      } else { 
+        throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede obtener resto de: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
       }
     }
     else if (this.tipo == tipoAritmetica.POT) {

@@ -40,12 +40,16 @@ export const tipoDominante = [
 export class Type{
     tipo : Tipo;
     typeName : string;
-    struct : null;
+    struct: null;
+    dim: any;
+    tipoArray: Tipo | null;
 
-    constructor(tipo: Tipo, typeName: string = '', struct : null = null){
+    constructor(tipo: Tipo, tipoArray : Tipo,  dim : any, typeName: string = '', struct : null = null){
         this.tipo = tipo;
         this.typeName = typeName;
         this.struct = struct;
+        this.dim = dim;
+        this.tipoArray = tipoArray;
     }
 
     getTipo() { 

@@ -28,10 +28,11 @@ export class ConsolaComponent implements OnInit {
   console: any;
 
   traducirCodigo() {
-    this.console.salida = this.console.entrada;
     errores.length = 0;
     let ast = Parser.parse(consolaGlobal.entrada);
     consolaGlobal.salida = "";
+    this.console.salida = "";
+    Generador.getInstance().limpiarGenerador();
     console.log(ast);
     try {
       let global = new Entorno(null);
@@ -65,7 +66,7 @@ export class ConsolaComponent implements OnInit {
   }
 
   limpiarTraduccion() {
-    this.console.traduccion = "";
+    this.console.salida = "";
   }
 
 

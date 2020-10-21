@@ -3,6 +3,7 @@
     const {Error_} = require('../Error/Error')
     //Instrucciones
     const {Print} = require('../Instrucciones/Funciones/Print');
+    const {Declaracion} = require('../Instrucciones/Variables/Declaracion');
     
     //Expresiones
     const {Variable} = require('../Expresion/Literales/Variable');
@@ -158,10 +159,129 @@ Instruccion
     : Imprimir 
     {
         $$ = $1;
+    }    
+    | Declaracion
+    {
+        $$ = $1;
+    
+    }
+    | Asignacion
+    {
+        $$ = $1;
     }
     | error Recuperar
     { 
         errores.push(new Error_(@1.first_line, @1.first_column, "Sintáctico", "Se esperaba: "+ yytext));
+    }
+;
+
+Declaracion
+    : LET ID DOSPUNTOS Tipo Dimensiones IGUAL Expresion PUNTOYCOMA // Para Arrays
+    {
+        let dim1 = $5;
+        let declaracion1 = new Declaracion($2, { tipo: $4, dim: dim1 }, $7, 1, @1.first_line, @1.first_column);
+        $$ = declaracion1;
+    }
+    | LET ID DOSPUNTOS Tipo Dimensiones PUNTOYCOMA // Para arrays
+    {
+        let dim2 = $5;
+        let declaracion2 = new Declaracion($2, { tipo: $4, dim: dim2 }, null, 1, @1.first_line, @1.first_column);
+        $$ = declaracion2;
+    }
+    | CONST ID DOSPUNTOS Tipo Dimensiones IGUAL Expresion PUNTOYCOMA
+    {
+        let dim3 = $5;
+        let declaracion3 = new Declaracion($2, { tipo: $4, dim: dim3 }, $7, 2, @1.first_line, @1.first_column);
+        $$ = declaracion3;
+    }
+    | CONST ID DOSPUNTOS Tipo Dimensiones PUNTOYCOMA
+    {
+        let dim4 = $5;
+        let declaracion4 = new Declaracion($2, { tipo: $4, dim: dim4 }, null, 2, @1.first_line, @1.first_column);
+        $$ = declaracion4;
+    }
+;
+
+
+Asignacion
+    : ID IGUAL Expresion PUNTOYCOMA
+    {
+        $$ = new Asignacion($1, $3, @1.first_line, @1.first_column);
+    }
+    | ID INC PUNTOYCOMA
+    {
+        $$ = new Asignacion($1, new Unario( 
+            new Variable($1, @1.first_line, @1.first_column),
+             tipoUnario.INC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
+    }
+    | ID DEC PUNTOYCOMA
+    {
+        $$ = new Asignacion($1, new Unario( 
+            new Variable($1, @1.first_line, @1.first_column),
+             tipoUnario.DEC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
+    }
+    | AccesosA IGUAL Expresion PUNTOYCOMA
+    {
+        $$ = new AsignarAcceso($1, $3, @1.first_line, @1.first_column);
+    }
+;
+
+Tipo
+    : TNUMBER
+    {
+        $$ = 0;
+    }
+    | TSTRING 
+    {
+        $$ = 1;
+    }
+    | TBOOLEAN
+    {
+        $$ = 2;
+    }
+    | NULL
+    {
+        $$ = 3;
+    }
+    | TTYPE
+    {
+        $$ = 5;
+    }
+    | TVOID
+    {
+        $$ = 6;
+    }
+    | ID
+    {
+        $$ = $1;
+    }
+;
+
+
+Dimensiones 
+    : NumeroDim {
+        $$ = $1;
+    }
+    | /*epsilon*/
+    {
+        $$ = 0;
+    }
+;
+
+NumeroDim
+    : NumeroDim Dim
+    {
+        $$ = $1 + $2;
+    }
+    | Dim {
+        $$ = $1;
+    }
+;
+
+Dim 
+    : CORIZQ CORDER
+    {
+        $$ = 1;
     }
 ;
 
@@ -298,4 +418,9 @@ F   : PARIZQ Expresion PARDER
     {
         $$ = new Variable($1, @1.first_line, @1.first_column);
     }
+;
+
+Recuperar
+    : PUNTOYCOMA
+    |
 ;

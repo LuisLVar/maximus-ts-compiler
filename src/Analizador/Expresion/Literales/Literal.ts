@@ -1,6 +1,7 @@
 import { Expresion } from "../../Abstractos/Expresion";
 import { Tipo, Type } from "../../Utils/Tipo";
 import { Retorno } from "../../Utils/Retorno";
+import { Generador } from 'src/Analizador/Generador/Generador';
 
 
 export class Literal extends Expresion{
@@ -12,16 +13,23 @@ export class Literal extends Expresion{
     public traducir(): Retorno{
         let result: Retorno;
         if (this.tipo == Tipo.BOOLEAN) { 
-            // return { tmp: this.value, tipo: Tipo.NUMBER }
+            const generator = Generador.getInstance();
+            result = new Retorno('',false, new Type(this.tipo, null, 0));
+            this.trueLabel = this.trueLabel == '' ? generator.newLabel() : this.trueLabel;
+            this.falseLabel = this.falseLabel == '' ? generator.newLabel() : this.falseLabel;
+            this.value == "true" ? generator.addGoto(this.trueLabel) : generator.addGoto(this.falseLabel);
+            result.trueLabel = this.trueLabel;
+            result.falseLabel = this.falseLabel;
+            return result;
         }
         else if (this.tipo == Tipo.STRING) { 
             // return { tmp: this.value, tipo: Tipo.BOOLEAN }
         }
         else if (this.tipo == Tipo.NULL) {
-            // return { tmp: this.value, tipo: Tipo.NULL }
+            return new Retorno( this.value, false, new Type(this.tipo, null, 0));
         }
         else {
-            return new Retorno(this.value, false, new Type(this.tipo));
+            return new Retorno(this.value, false, new Type(this.tipo, null, 0));
         }
         return result;
     }

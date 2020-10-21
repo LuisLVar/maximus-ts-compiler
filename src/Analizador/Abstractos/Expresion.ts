@@ -6,10 +6,13 @@ export abstract class Expresion {
   
   private linea: number;
   private columna: number;
+  trueLabel : string;
+  falseLabel : string;
 
   constructor(linea: number, columna: number) {
     this.linea = linea;
     this.columna = columna;
+    this.trueLabel = this.falseLabel = '';
   }
 
   public abstract traducir(entorno: Entorno): Retorno;
