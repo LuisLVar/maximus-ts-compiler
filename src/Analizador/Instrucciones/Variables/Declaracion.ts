@@ -5,6 +5,7 @@ import { Tipo, Type } from "../../Utils/Tipo";
 import { Retorno } from "../../Utils/Retorno";
 import { Error_ } from "../../Error/Error";
 import { Generador } from 'src/Analizador/Generador/Generador';
+import { Simbolo } from 'src/Analizador/Simbolo/Simbolo';
 
 
 export enum tipoDeclaracion {
@@ -34,20 +35,24 @@ export class Declaracion extends Instruccion {
       throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "Error en declaracion, variable ya fue declarada: " + this.id);
     }
 
+    let generador = Generador.getInstance();
+    let tmp = generador.newTmp();
+    generador.addExpresion(tmp, 'p', '+', entorno.size);
     let expresion = this.valor.traducir(entorno);
     if (expresion.getTipo() == this.tipo.tipo) {
       if (this.tipo.dim > 0) {
         //Es Array
         let tipoFinal = new Type(Tipo.ARRAY, this.tipo.tipo, this.tipo.dim);
-        entorno.declararVariable(this.id, expresion, tipoFinal, this.tipoVariable, this.getLinea(), this.getColumna());
+        // entorno.declararVariable(this.id, expresion, tipoFinal, this.tipoVariable, this.getLinea(), this.getColumna());
       } else { 
         let tipoFinal = new Type(this.tipo.tipo, null, 0);
-        entorno.declararVariable(this.id, expresion, tipoFinal, this.tipoVariable, this.getLinea(), this.getColumna());
+        entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size++, false, this.getLinea(), this.getColumna()));
+        generador.declararVariable(tmp, expresion);
       }
 
     } else { 
       throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "Error en declaracion: " +
-      entorno.getTipoDato(expresion.getTipo()) + " no es asignable a " + entorno.getTipoDato(this.tipo));
+      entorno.getTipoDato(expresion.getTipo()) + " no es asignable a " + entorno.getTipoDato(this.tipo.tipo));
     }
   }
 }

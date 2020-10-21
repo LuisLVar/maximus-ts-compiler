@@ -4,6 +4,7 @@
     //Instrucciones
     const {Print} = require('../Instrucciones/Funciones/Print');
     const {Declaracion} = require('../Instrucciones/Variables/Declaracion');
+    const {Asignacion} = require('../Instrucciones/Variables/Asignacion');
     
     //Expresiones
     const {Variable} = require('../Expresion/Literales/Variable');
@@ -203,29 +204,6 @@ Declaracion
 ;
 
 
-Asignacion
-    : ID IGUAL Expresion PUNTOYCOMA
-    {
-        $$ = new Asignacion($1, $3, @1.first_line, @1.first_column);
-    }
-    | ID INC PUNTOYCOMA
-    {
-        $$ = new Asignacion($1, new Unario( 
-            new Variable($1, @1.first_line, @1.first_column),
-             tipoUnario.INC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
-    }
-    | ID DEC PUNTOYCOMA
-    {
-        $$ = new Asignacion($1, new Unario( 
-            new Variable($1, @1.first_line, @1.first_column),
-             tipoUnario.DEC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
-    }
-    | AccesosA IGUAL Expresion PUNTOYCOMA
-    {
-        $$ = new AsignarAcceso($1, $3, @1.first_line, @1.first_column);
-    }
-;
-
 Tipo
     : TNUMBER
     {
@@ -285,6 +263,24 @@ Dim
     }
 ;
 
+Asignacion
+    : ID IGUAL Expresion PUNTOYCOMA
+    {
+        $$ = new Asignacion($1, $3, @1.first_line, @1.first_column);
+    }
+    | ID INC PUNTOYCOMA
+    {
+        $$ = new Asignacion($1, new Unario( 
+            new Variable($1, @1.first_line, @1.first_column),
+             tipoUnario.INC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
+    }
+    | ID DEC PUNTOYCOMA
+    {
+        $$ = new Asignacion($1, new Unario( 
+            new Variable($1, @1.first_line, @1.first_column),
+             tipoUnario.DEC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
+    }
+;
 
 Imprimir
     : CONSOLELOG PARIZQ ListaExp PARDER PUNTOYCOMA 

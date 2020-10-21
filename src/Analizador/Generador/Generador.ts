@@ -1,4 +1,3 @@
-import { generate } from 'rxjs';
 import { Retorno } from '../Utils/Retorno';
 import { Tipo } from '../Utils/Tipo';
 
@@ -37,6 +36,7 @@ export class Generador {
     this.code = new Array();
     this.finalCode = new Array();
     this.tmpActivos = new Set();
+    this.temporales = new Array();
   }
 
   public getCode(): string {
@@ -130,12 +130,38 @@ export class Generador {
     this.code.push(`if (${left}${operador}${right}) goto ${label};`);
   }
 
-/* ------------ Declaracion de Variables -------------- */
+/* ------------ Declaracion y Asignacion de Variables -------------- */
   
-  declararVariable(valor: Retorno, posRelativa: any) { 
-    let tmp = this.newTmp();
-    this.code.push(`${tmp} = p + ${posRelativa};`);
-    this.code.push(`stack[${tmp}]=${valor.getValor()};`);
+  setToStack(tmp : any, valor: any) { 
+    this.code.push(`stack[${tmp}]=${valor};`);
+  }
+  
+  declararVariable(tmp : any, valor: Retorno) { 
+    if (valor.getTipo() == Tipo.BOOLEAN) {
+      this.addLabel(valor.trueLabel);
+      this.setToStack(tmp, '1');
+      let label = this.newLabel();
+      this.addGoto(label);
+      this.addLabel(valor.falseLabel);
+      this.setToStack(tmp, '0');
+      this.addLabel(label);
+    } else if(valor.getTipo() == Tipo.NUMBER){ 
+      this.setToStack(tmp, valor.getValor());
+    }
+  }
+
+  asignarVariable(tmp : any, valor: Retorno) { 
+    if (valor.getTipo() == Tipo.NUMBER) {
+      this.setToStack(tmp, valor.getValor());
+    } else if (valor.getTipo() == Tipo.BOOLEAN) { 
+      this.addLabel(valor.trueLabel);
+      this.setToStack(tmp, '1');
+      let label = this.newLabel();
+      this.addGoto(label);
+      this.addLabel(valor.falseLabel);
+      this.setToStack(tmp, '0');
+      this.addLabel(label);
+    }
 
   }
 

@@ -10,8 +10,8 @@ import { Retorno } from '../Utils/Retorno';
 
 
 export class Entorno {
-  private variables: Map<string, Simbolo>;
-  private anterior: Entorno | null;
+  variables: Map<string, Simbolo>;
+  anterior: Entorno | null;
   // private funciones: Map<string, Funcion>
   // private types: Map<string, Type>
 
@@ -41,29 +41,6 @@ export class Entorno {
     return this.anterior;
   }
 
-  public asignarVariable(id: string, valor: any, tipo: any, linea: number, columna: number) {
-
-  }
-
-  public declararVariable(id: string, valor: Retorno, tipoType: Type, tipoVariable: tipoDeclaracion, linea: number, columna: number) {
-    let entorno: Entorno | null = this;
-    if (entorno != null) {
-      if (entorno.variables.has(id)) {
-        throw new Error_(linea, columna, 'Semántico', "Error en declaracion: variable " + id + " ya ha sido declarada.");
-      }
-    }
-
-    let tipo = tipoType.tipo;
-
-    if (tipo == Tipo.BOOLEAN || tipo == Tipo.NUMBER) { 
-      
-      this.variables.set(id, new Simbolo(id, tipoType, tipoVariable, this.size++, false, linea, columna));
-      let generador = Generador.getInstance();
-      generador.declararVariable(valor, this.size-1);
-    } else {
-
-    }
-  }
 
   public getVariable(id: string) {
     let entorno: Entorno | null = this;

@@ -30,6 +30,9 @@ export class ConsolaComponent implements OnInit {
   traducirCodigo() {
     errores.length = 0;
     let ast = Parser.parse(consolaGlobal.entrada);
+    if (errores.length > 0) { 
+      alert("Compilacion con errores!");
+    }
     consolaGlobal.salida = "";
     this.console.salida = "";
     Generador.getInstance().limpiarGenerador();
@@ -47,6 +50,9 @@ export class ConsolaComponent implements OnInit {
           console.log(error);
           errores.push(error);
         }
+      }
+      if (errores.length > 0) { 
+        alert("Compilacion con errores!");
       }
 
       let code = Generador.getInstance().getCode();

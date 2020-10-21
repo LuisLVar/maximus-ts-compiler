@@ -10,15 +10,11 @@ export class Variable extends Expresion{
     }
 
     public traducir(entorno: Entorno): Retorno {
-        const value = entorno.getVariable(this.id);
+        let  variable = entorno.getVariable(this.id);
         let result: Retorno;
-        if (value == null) {
+        if (variable == null) {
             throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "La variable '" + this.id + "' no ha sido declarada.");
         }
-
-        
-
-
 
         return result;
     }

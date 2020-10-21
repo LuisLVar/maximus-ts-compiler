@@ -13,6 +13,7 @@ export class Literal extends Expresion{
     public traducir(): Retorno{
         let result: Retorno;
         if (this.tipo == Tipo.BOOLEAN) { 
+            console.log("Literal booleana");
             const generator = Generador.getInstance();
             result = new Retorno('',false, new Type(this.tipo, null, 0));
             this.trueLabel = this.trueLabel == '' ? generator.newLabel() : this.trueLabel;

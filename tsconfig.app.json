@@ -35,6 +35,9 @@
     "src/Analizador/Expresion/NoBinaria/Ternario.ts",
     //Instrucciones
     "src/Analizador/Instrucciones/Funciones/Print.ts",
+    "src/Analizador/Instrucciones/Variables/Declaracion.ts",
+    "src/Analizador/Instrucciones/Variables/Asignacion.ts",
+    
   ],
   "include": [
     "src/**/*.d.ts"
