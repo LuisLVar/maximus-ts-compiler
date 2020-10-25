@@ -11,7 +11,7 @@ export class Retorno {
   simbolo: Simbolo | null;
 
   constructor(valor: string, isTemp: boolean, tipo: Type, simbolo: Simbolo | null = null) {
-    this.valor = valor;
+    this.valor = valor; // Temporal o valor.
     this.isTemp = isTemp;
     this.tipo = tipo;
     this.simbolo = simbolo;

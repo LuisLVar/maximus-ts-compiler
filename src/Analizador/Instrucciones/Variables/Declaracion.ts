@@ -37,7 +37,7 @@ export class Declaracion extends Instruccion {
 
     let generador = Generador.getInstance();
     let tmp = generador.newTmp();
-    generador.addExpresion(tmp, 'p', '+', entorno.size);
+    generador.addExpresion(tmp, 'p', '+', entorno.size++);
     let expresion = this.valor.traducir(entorno);
     if (expresion.getTipo() == this.tipo.tipo) {
       if (this.tipo.dim > 0) {
@@ -46,7 +46,7 @@ export class Declaracion extends Instruccion {
         // entorno.declararVariable(this.id, expresion, tipoFinal, this.tipoVariable, this.getLinea(), this.getColumna());
       } else { 
         let tipoFinal = new Type(this.tipo.tipo, null, 0);
-        entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size++, false, this.getLinea(), this.getColumna()));
+        entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size-1, false, this.getLinea(), this.getColumna()));
         generador.declararVariable(tmp, expresion);
       }
 

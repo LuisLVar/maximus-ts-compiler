@@ -27,7 +27,6 @@ export class Variable extends Expresion{
         generador.getFromStack(tmp2, tmp);
             
         if (tipo == Tipo.BOOLEAN) { 
-            console.log("Variable booleana");
             result = new Retorno('',false, new Type(tipo, null, 0));
             this.trueLabel = this.trueLabel == '' ? generador.newLabel() : this.trueLabel;
             this.falseLabel = this.falseLabel == '' ? generador.newLabel() : this.falseLabel;
@@ -41,10 +40,10 @@ export class Variable extends Expresion{
             // return { tmp: this.value, tipo: Tipo.BOOLEAN }
         }
         else if (tipo == Tipo.NULL) {
-            // return new Retorno( this.value, false, new Type(this.tipo, null, 0));
+            return new Retorno( "0", false, new Type(tipo, null, 0));
         }
         else {
-            return new Retorno(tmp2, false, new Type(tipo, null, 0));
+            return new Retorno(tmp2, true, new Type(tipo, null, 0));
         }
         return result;
     }

@@ -136,8 +136,8 @@ export class Generador {
     this.code.push(`stack[(int)${tmp}]=${valor};`);
   }
 
-  getFromStack(tmp : any, posRelativa: any) { 
-    this.code.push(`${tmp} = stack[(int)${posRelativa}];`);
+  getFromStack(tmp : any, posicion: any) { 
+    this.code.push(`${tmp} = stack[(int)${posicion}];`);
   }
   
   declararVariable(tmp : any, valor: Retorno) { 
