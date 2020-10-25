@@ -9,6 +9,7 @@
     const {Cuerpo} = require('../Instrucciones/Control/Cuerpo');
     const {While} = require('../Instrucciones/Control/While');
     const {DoWhile} = require('../Instrucciones/Control/DoWhile');
+    const {For} = require('../Instrucciones/Control/For');
     
     //Expresiones
     const {Variable} = require('../Expresion/Literales/Variable');
@@ -190,6 +191,14 @@ Instruccion
     {
         $$ = $1;
     }
+    | NTFor
+    {
+        $$ = $1;
+    }
+    | NTSwitch
+    {
+        $$ = $1;
+    }
     | error Recuperar
     { 
         errores.push(new Error_(@1.first_line, @1.first_column, "Sintáctico", "Se esperaba: "+ yytext));
@@ -351,6 +360,38 @@ Cuerpo
     | LLAVEIZQ LLAVEDER
     {
         $$ = new Cuerpo(new Array(), @1.first_line, @1.first_column);
+    }
+;
+
+NTFor
+    : TFOR PARIZQ AorD  Expresion PUNTOYCOMA AsignacionFor PARDER Cuerpo
+    {
+        $$ = new For($3, $4, $6, $8, @1.first_line, @1.first_column);
+    }
+;
+
+
+AorD
+    : Declaracion
+    | Asignacion
+;
+
+AsignacionFor
+    : ID IGUAL Expresion
+    {
+        $$ = new Asignacion($1, $3, @1.first_line, @1.first_column);
+    }
+    | ID INC
+    {
+        $$ = new Asignacion($1, new Unario( 
+            new Variable($1, @1.first_line, @1.first_column),
+             tipoUnario.INC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
+    }
+    | ID DEC
+    {
+        $$ = new Asignacion($1, new Unario( 
+            new Variable($1, @1.first_line, @1.first_column),
+             tipoUnario.DEC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
     }
 ;
 

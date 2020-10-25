@@ -24,7 +24,7 @@ export class Literal extends Expresion{
             return result;
         }
         else if (this.tipo == Tipo.STRING) { 
-            // return { tmp: this.value, tipo: Tipo.BOOLEAN }
+            //return { tmp: this.value, tipo: Tipo.BOOLEAN }
         }
         else if (this.tipo == Tipo.NULL) {
             return new Retorno( '0', false, new Type(this.tipo, null, 0));

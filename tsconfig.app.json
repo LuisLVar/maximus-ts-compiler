@@ -42,6 +42,7 @@
     "src/Analizador/Instrucciones/Control/Cuerpo.ts",
     "src/Analizador/Instrucciones/Control/While.ts",
     "src/Analizador/Instrucciones/Control/DoWhile.ts",
+    "src/Analizador/Instrucciones/Control/For.ts",
     
   ],
   "include": [

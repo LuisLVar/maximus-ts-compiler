@@ -15,7 +15,6 @@ export class DoWhile extends Instruccion {
     console.log("Entro While");
     const generador = Generador.getInstance();
     const newEntorno = new Entorno(entorno);
-    const labelWhile = generador.newLabel();
     generador.addComment(' --------- Estructura de Control: DoWhile ----------');
     newEntorno.continue = this.condicion.trueLabel = generador.newLabel();
     newEntorno.break = this.condicion.falseLabel = generador.newLabel();
