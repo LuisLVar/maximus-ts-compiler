@@ -126,14 +126,18 @@ export class Generador {
     this.code.push(`goto ${label};`);
   }
 
-  addIf(left: any, right: any, operador: string, label: string) {
+  addIf(left: any, right: any, operador: string,  label: string) {
     this.code.push(`if (${left}${operador}${right}) goto ${label};`);
   }
 
 /* ------------ Declaracion y Asignacion de Variables -------------- */
   
   setToStack(tmp : any, valor: any) { 
-    this.code.push(`stack[${tmp}]=${valor};`);
+    this.code.push(`stack[(int)${tmp}]=${valor};`);
+  }
+
+  getFromStack(tmp : any, posRelativa: any) { 
+    this.code.push(`${tmp} = stack[(int)${posRelativa}];`);
   }
   
   declararVariable(tmp : any, valor: Retorno) { 

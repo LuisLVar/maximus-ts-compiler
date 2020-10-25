@@ -2,6 +2,8 @@ import { Expresion } from "../../Abstractos/Expresion";
 import { Entorno } from "../../Simbolo/Entorno";
 import { Retorno } from "../../Utils/Retorno";
 import { Error_ } from "../../Error/Error";
+import { Tipo, Type } from "../../Utils/Tipo";
+import { Generador } from 'src/Analizador/Generador/Generador';
 
 export class Variable extends Expresion{
 
@@ -16,6 +18,34 @@ export class Variable extends Expresion{
             throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "La variable '" + this.id + "' no ha sido declarada.");
         }
 
+        let tipo = variable.getTipo().getTipo();
+        const generador = Generador.getInstance();
+
+        let tmp = generador.newTmp();
+        generador.addExpresion(tmp, 'p', '+', variable.getPosRelativa());
+        let tmp2 = generador.newTmp();
+        generador.getFromStack(tmp2, tmp);
+            
+        if (tipo == Tipo.BOOLEAN) { 
+            console.log("Variable booleana");
+            result = new Retorno('',false, new Type(tipo, null, 0));
+            this.trueLabel = this.trueLabel == '' ? generador.newLabel() : this.trueLabel;
+            this.falseLabel = this.falseLabel == '' ? generador.newLabel() : this.falseLabel;
+            generador.addIf(tmp2,'1', '==', this.trueLabel);
+            generador.addGoto(this.falseLabel);
+            result.trueLabel = this.trueLabel;
+            result.falseLabel = this.falseLabel;
+            return result;
+        }
+        else if (tipo == Tipo.STRING) { 
+            // return { tmp: this.value, tipo: Tipo.BOOLEAN }
+        }
+        else if (tipo == Tipo.NULL) {
+            // return new Retorno( this.value, false, new Type(this.tipo, null, 0));
+        }
+        else {
+            return new Retorno(tmp2, false, new Type(tipo, null, 0));
+        }
         return result;
     }
 }
