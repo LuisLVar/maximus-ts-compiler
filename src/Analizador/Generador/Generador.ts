@@ -80,8 +80,6 @@ export class Generador {
   }
 
   public addMain() {
-    console.log("Main:");
-    console.log(this.code);
     this.finalCode.push(`\nvoid main(){`);
     Array.prototype.push.apply(this.finalCode, this.code)
     this.finalCode.push(`return;`);
@@ -166,7 +164,10 @@ export class Generador {
       this.setToStack(tmp, '0');
       this.addLabel(label);
     }
+  }
 
+  addComment(texto : string) { 
+    this.code.push(`// ${texto}`);
   }
 
 

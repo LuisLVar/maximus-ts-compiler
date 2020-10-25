@@ -16,6 +16,8 @@ export class Entorno {
   // private types: Map<string, Type>
 
   size: number;
+  break: string | null;
+  continue: string | null;
 
   constructor(anterior: Entorno | null) {
     this.variables = new Map();

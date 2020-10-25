@@ -36,7 +36,6 @@ export class ConsolaComponent implements OnInit {
     consolaGlobal.salida = "";
     this.console.salida = "";
     Generador.getInstance().limpiarGenerador();
-    console.log(ast);
     try {
       let global = new Entorno(null);
 

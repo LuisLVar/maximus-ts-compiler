@@ -5,6 +5,10 @@
     const {Print} = require('../Instrucciones/Funciones/Print');
     const {Declaracion} = require('../Instrucciones/Variables/Declaracion');
     const {Asignacion} = require('../Instrucciones/Variables/Asignacion');
+    const {If} = require('../Instrucciones/Control/If');
+    const {Cuerpo} = require('../Instrucciones/Control/Cuerpo');
+    const {While} = require('../Instrucciones/Control/While');
+    const {DoWhile} = require('../Instrucciones/Control/DoWhile');
     
     //Expresiones
     const {Variable} = require('../Expresion/Literales/Variable');
@@ -170,6 +174,22 @@ Instruccion
     {
         $$ = $1;
     }
+    | NTIf
+    {
+        $$ = $1;
+    }
+    | Cuerpo
+    {
+        $$ = $1;
+    }
+    | NTWhile
+    {
+        $$ = $1;
+    }
+    | NTDoWhile
+    {
+        $$ = $1;
+    }
     | error Recuperar
     { 
         errores.push(new Error_(@1.first_line, @1.first_column, "Sintáctico", "Se esperaba: "+ yytext));
@@ -286,6 +306,51 @@ Imprimir
     : CONSOLELOG PARIZQ ListaExp PARDER PUNTOYCOMA 
     {
         $$ = new Print($3, @1.first_line, @1.first_column);
+    }
+;
+
+NTIf
+    : TIF PARIZQ Expresion PARDER Cuerpo NTElse
+    {
+        $$ = new If($3, $5, $6, @1.first_line, @1.first_column);
+    }
+;
+
+NTElse
+    : TELSE Cuerpo {
+        $$ = $2;
+    }
+    | TELSE NTIf {
+        $$ = $2;
+    }
+    | /* Epsilon */
+    {
+        $$ = null;
+    }
+;
+
+NTWhile
+    : TWHILE PARIZQ Expresion PARDER Cuerpo
+    {
+        $$ = new While($3, $5, @1.first_line, @1.first_column);
+    }
+;
+
+NTDoWhile
+    : TDO Cuerpo TWHILE PARIZQ Expresion PARDER PUNTOYCOMA
+    {
+        $$ = new DoWhile($5, $2, @1.first_line, @1.first_column);
+    }
+;
+
+Cuerpo
+    : LLAVEIZQ Instrucciones LLAVEDER
+    {
+        $$ = new Cuerpo($2, @1.first_line, @1.first_column);
+    }
+    | LLAVEIZQ LLAVEDER
+    {
+        $$ = new Cuerpo(new Array(), @1.first_line, @1.first_column);
     }
 ;
 
