@@ -10,6 +10,11 @@
     const {While} = require('../Instrucciones/Control/While');
     const {DoWhile} = require('../Instrucciones/Control/DoWhile');
     const {For} = require('../Instrucciones/Control/For');
+    const {Break} = require('../Instrucciones/Gotos/Break');
+    const {Continue} = require('../Instrucciones/Gotos/Continue');
+    const {Switch} = require('../Instrucciones/Control/Switch');
+    const {Case, tipoCase} = require('../Instrucciones/Control/Case');
+    
     
     //Expresiones
     const {Variable} = require('../Expresion/Literales/Variable');
@@ -198,6 +203,14 @@ Instruccion
     | NTSwitch
     {
         $$ = $1;
+    }
+    | BREAK PUNTOYCOMA
+    {
+        $$ = new Break(@1.first_line, @1.first_column);
+    }
+    | CONTINUE PUNTOYCOMA
+    {
+        $$ = new Continue(@1.first_line, @1.first_column);
     }
     | error Recuperar
     { 
@@ -394,6 +407,48 @@ AsignacionFor
              tipoUnario.DEC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
     }
 ;
+
+NTSwitch
+    : TSWITCH PARIZQ Expresion PARDER LLAVEIZQ Cases LLAVEDER
+    {
+        $$ = new Switch($3, $6, @1.first_line, @1.first_column);
+    }
+;
+
+Cases
+    :  Cases Caso
+    {
+        $1.push($2);
+        $$ = $1;
+    }
+    | Caso 
+    {
+        $$ = [$1];
+    }
+;
+
+Caso
+    : TCASE Expresion DOSPUNTOS Case2
+    {
+        $$ = new Case($2, $4, @1.first_line, @1.first_column, tipoCase.CASE);
+    }
+    | TDEFAULT DOSPUNTOS Case2
+    {
+        $$ = new Case(new Literal(0, @1.first_line, @1.first_column, 0), $3, @1.first_line, @1.first_column, tipoCase.DEFAULT);
+    }
+;
+
+Case2
+    : Instrucciones {
+        $$ = $1;
+    }
+    | /* Epsilon */
+    {
+        $$ = new Array();
+    }
+;
+
+
 
 ListaExp
     : ListaExp COMA Expresion
