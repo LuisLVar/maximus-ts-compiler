@@ -53,16 +53,16 @@ export class Generador {
 
   //Labels
 
-  public newLabel() {
+  newLabel() {
     let label = 'L' + this.label++;
     return label;
   }
 
-  public addLabel(label: string) {
+  addLabel(label: string) {
     this.code.push(`${label}:`);
   }
 
-  public setEncabezado() {
+  setEncabezado() {
     this.finalCode.push(`#include <stdio.h>\n`);
     this.finalCode.push(`double heap[16000];`);
     this.finalCode.push(`double stack[16000];`);
@@ -72,21 +72,21 @@ export class Generador {
     this.addMain();
   }
 
-  public declararTemporales() {
+  declararTemporales() {
     if (this.temporales.length > 0) {
       let codigo = 'double ' + this.temporales.join(',') + ";";
       this.finalCode.push(codigo);
     }
   }
 
-  public addMain() {
+  addMain() {
     this.finalCode.push(`\nvoid main(){`);
     Array.prototype.push.apply(this.finalCode, this.code)
     this.finalCode.push(`return;`);
     this.finalCode.push(`}`);
   }
 
-  public Imprimir(valor: Retorno) {
+  Imprimir(valor: Retorno) {
     let tipo = valor.getTipo();
     if (tipo == Tipo.NUMBER) {
       this.code.push(`printf("%f", (double)${valor.getValor()});`);
@@ -98,8 +98,25 @@ export class Generador {
       this.addLabel(valor.falseLabel);
       this.code.push(`printf("false");`);
       this.addLabel(label);
-    } else if (tipo == Tipo.NULL) { 
+    } else if (tipo == Tipo.NULL) {
       this.code.push(`printf("null");`);
+    } else if (tipo == Tipo.STRING) { 
+      this.addComment("--------- Print String --------------");
+      let label = this.newLabel();
+      this.addExpresion('h', valor.getValor());
+      this.addLabel(label);
+      let tmp = this.newTmp();
+      this.getFromHeap(tmp, 'h');
+      let labelTrue = this.newLabel();
+      let labelFalse = this.newLabel();
+      this.addIf(tmp, '-1', '!=', labelTrue);
+      this.addGoto(labelFalse);
+      this, this.addLabel(labelTrue);
+      this.code.push(`printf("%c", (int)${tmp});`);
+      this.nextHeap();
+      this.addGoto(label);
+      this.addLabel(labelFalse);
+      this.addComment("--------- Fin Print String --------------");
     }
   }
 
@@ -116,7 +133,7 @@ export class Generador {
 
   /* -----------    Expresiones  --------------- */
 
-  addExpresion(asignable: string, left: any, operador: any, right: any) {
+  addExpresion(asignable: string, left: any, operador: any = '', right: any = '') {
     this.code.push(`${asignable} = ${left} ${operador} ${right};`);
   }
 
@@ -168,6 +185,19 @@ export class Generador {
 
   addComment(texto : string) { 
     this.code.push(`// ${texto}`);
+  }
+
+  // ------------ HEAP -----------------
+  nextHeap() { 
+    this.code.push('h = h + 1;'); 
+  }
+
+  getFromHeap(tmp : string, indice: string) { 
+    this.code.push(`${tmp} = heap[(int)${indice}];`);
+  }
+
+  setToHeap(indice: string, tmp : string) { 
+    this.code.push(`heap[(int)${indice}] = ${tmp};`);
   }
 
 

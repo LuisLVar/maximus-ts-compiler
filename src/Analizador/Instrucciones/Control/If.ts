@@ -32,6 +32,7 @@ export class If extends Instruccion {
       else {
         generador.addLabel(condicion.falseLabel);
       }
+      generador.addComment('----------- Fin If -------------');
       return;
     }
     throw new Error_(this.getLinea(), this.getColumna(), 'Semantico', `Error If: La condicion no es booleana -> ${Tipo[condicion?.getTipo()]}`);

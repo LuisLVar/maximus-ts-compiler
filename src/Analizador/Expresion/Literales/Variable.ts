@@ -37,7 +37,7 @@ export class Variable extends Expresion{
             return result;
         }
         else if (tipo == Tipo.STRING) { 
-            // return { tmp: this.value, tipo: Tipo.BOOLEAN }
+            return new Retorno(tmp2, true, new Type(tipo, null, 0));
         }
         else if (tipo == Tipo.NULL) {
             return new Retorno( "0", false, new Type(tipo, null, 0));

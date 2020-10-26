@@ -12,19 +12,27 @@ export class Literal extends Expresion{
 
     public traducir(): Retorno{
         let result: Retorno;
+        const generador = Generador.getInstance();
         if (this.tipo == Tipo.BOOLEAN) { 
-            console.log("Literal booleana");
-            const generator = Generador.getInstance();
             result = new Retorno('',false, new Type(this.tipo, null, 0));
-            this.trueLabel = this.trueLabel == '' ? generator.newLabel() : this.trueLabel;
-            this.falseLabel = this.falseLabel == '' ? generator.newLabel() : this.falseLabel;
-            this.value == "true" ? generator.addGoto(this.trueLabel) : generator.addGoto(this.falseLabel);
+            this.trueLabel = this.trueLabel == '' ? generador.newLabel() : this.trueLabel;
+            this.falseLabel = this.falseLabel == '' ? generador.newLabel() : this.falseLabel;
+            this.value == "true" ? generador.addGoto(this.trueLabel) : generador.addGoto(this.falseLabel);
             result.trueLabel = this.trueLabel;
             result.falseLabel = this.falseLabel;
             return result;
         }
         else if (this.tipo == Tipo.STRING) { 
-            //return { tmp: this.value, tipo: Tipo.BOOLEAN }
+            let tmp = generador.newTmp();
+            generador.addExpresion(tmp, 'h');
+            let valor = this.value.replace(/["]+/g, '').replace(/[']+/g, '');
+            for (let caracter of valor) { 
+                generador.setToHeap('h', caracter.charCodeAt(0));
+                generador.nextHeap();
+            }
+            generador.setToHeap('h', '-1');
+            generador.nextHeap();
+            return new Retorno(tmp, true, new Type(Tipo.STRING, null, 0));
         }
         else if (this.tipo == Tipo.NULL) {
             return new Retorno( '0', false, new Type(this.tipo, null, 0));
@@ -32,6 +40,6 @@ export class Literal extends Expresion{
         else {
             return new Retorno(this.value, false, new Type(this.tipo, null, 0));
         }
-        return result;
+        // return result;
     }
 }
