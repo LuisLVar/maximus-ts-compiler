@@ -20,6 +20,8 @@ export class Literal extends Expresion{
             this.value == "true" ? generador.addGoto(this.trueLabel) : generador.addGoto(this.falseLabel);
             result.trueLabel = this.trueLabel;
             result.falseLabel = this.falseLabel;
+            this.retornoLabel = result.retornoLbl = generador.newLabel();
+            generador.addLabel(this.retornoLabel);
             return result;
         }
         else if (this.tipo == Tipo.STRING) { 

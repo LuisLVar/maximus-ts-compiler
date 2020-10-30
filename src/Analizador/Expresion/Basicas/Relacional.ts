@@ -27,6 +27,8 @@ export class Relacional extends Expresion {
     const generador = Generador.getInstance();
     let result: Retorno;
 
+    //TODO Vadar tipos, diferenciacion y igualacion
+
     if (this.tipo == tipoRelacional.IGUALIGUAL) {
       this.trueLabel = this.trueLabel == '' ? generador.newLabel() : this.trueLabel;
       this.falseLabel = this.falseLabel == '' ? generador.newLabel() : this.falseLabel;

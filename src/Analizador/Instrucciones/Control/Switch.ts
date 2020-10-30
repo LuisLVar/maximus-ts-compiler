@@ -65,6 +65,7 @@ export class Switch extends Instruccion {
       let newEntorno = new Entorno(entorno);
       newEntorno.break = labelBreak;
       generador.addLabel(casesLocales[i].labelTrue);
+      newEntorno.continue = entorno.continue;
       casesLocales[i].traducir(newEntorno);
     }
 

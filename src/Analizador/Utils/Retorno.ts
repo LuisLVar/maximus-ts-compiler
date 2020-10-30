@@ -9,17 +9,22 @@ export class Retorno {
   trueLabel: string;
   falseLabel: string;
   simbolo: Simbolo | null;
+  retornoLbl: string;
 
   constructor(valor: string, isTemp: boolean, tipo: Type, simbolo: Simbolo | null = null) {
     this.valor = valor; // Temporal o valor.
     this.isTemp = isTemp;
     this.tipo = tipo;
     this.simbolo = simbolo;
-    this.trueLabel = this.falseLabel = '';
+    this.trueLabel = this.falseLabel = this.retornoLbl = '';
   }
 
   getValor() {
     Generador.getInstance().liberarTmp(this.valor);
+    return this.valor;
+  }
+
+  getValorCheck() {
     return this.valor;
   }
 

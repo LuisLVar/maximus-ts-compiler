@@ -18,6 +18,9 @@ export class If extends Instruccion {
     generador.addComment('----------- Estructura de Control: If -------------');
     const condicion = this.condicion?.traducir(entorno);
     const newEntorno = new Entorno(entorno);
+    newEntorno.break = entorno.break;
+    newEntorno.continue = entorno.continue;
+    newEntorno.size = entorno.size;
     if (condicion.getTipo() == Tipo.BOOLEAN) {
       generador.addLabel(condicion.trueLabel);
       this.cuerpoIf.traducir(newEntorno);

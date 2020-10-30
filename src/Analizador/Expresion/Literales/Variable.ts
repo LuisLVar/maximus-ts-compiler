@@ -34,6 +34,8 @@ export class Variable extends Expresion{
             generador.addGoto(this.falseLabel);
             result.trueLabel = this.trueLabel;
             result.falseLabel = this.falseLabel;
+            this.retornoLabel = result.retornoLbl = generador.newLabel();
+            generador.addLabel(this.retornoLabel);
             return result;
         }
         else if (tipo == Tipo.STRING) { 

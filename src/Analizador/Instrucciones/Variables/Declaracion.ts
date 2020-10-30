@@ -38,21 +38,56 @@ export class Declaracion extends Instruccion {
     let generador = Generador.getInstance();
     let tmp = generador.newTmp();
     generador.addExpresion(tmp, 'p', '+', entorno.size++);
-    let expresion = this.valor.traducir(entorno);
-    if (expresion.getTipo() == this.tipo.tipo) {
-      if (this.tipo.dim > 0) {
-        //Es Array
-        let tipoFinal = new Type(Tipo.ARRAY, this.tipo.tipo, this.tipo.dim);
-        // entorno.declararVariable(this.id, expresion, tipoFinal, this.tipoVariable, this.getLinea(), this.getColumna());
-      } else { 
-        let tipoFinal = new Type(this.tipo.tipo, null, 0);
-        entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size-1, false, this.getLinea(), this.getColumna()));
-        generador.declararVariable(tmp, expresion);
+    if (this.valor != null) {
+      let expresion = this.valor.traducir(entorno);
+      if (expresion.getTipo() == this.tipo.tipo) {
+        if (this.tipo.dim > 0) {
+          //Es Array
+          let tipoFinal = new Type(Tipo.ARRAY, this.tipo.tipo, this.tipo.dim);
+          // entorno.declararVariable(this.id, expresion, tipoFinal, this.tipoVariable, this.getLinea(), this.getColumna());
+        } else {
+          let tipoFinal = new Type(this.tipo.tipo, null, 0);
+          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, false, this.getLinea(), this.getColumna()));
+          generador.declararVariable(tmp, expresion);
+        }
+  
+      } else {
+        throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "Error en declaracion: " +
+          entorno.getTipoDato(expresion.getTipo()) + " no es asignable a " + entorno.getTipoDato(this.tipo.tipo));
       }
-
     } else { 
-      throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "Error en declaracion: " +
-      entorno.getTipoDato(expresion.getTipo()) + " no es asignable a " + entorno.getTipoDato(this.tipo.tipo));
+      let tipoFinal : Type;
+      let expresion : Retorno;
+      switch (this.tipo.tipo) { 
+        case Tipo.NUMBER:
+          tipoFinal = new Type(this.tipo.tipo, null, 0);
+          expresion = new Retorno('0', false, tipoFinal);
+          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, false, this.getLinea(), this.getColumna()));
+          generador.declararVariable(tmp, expresion);
+          break;
+        case Tipo.BOOLEAN:
+          tipoFinal = new Type(this.tipo.tipo, null, 0);
+          expresion = new Retorno('', false, tipoFinal);
+          expresion.trueLabel = generador.newLabel();
+          expresion.falseLabel = generador.newLabel();
+          generador.addGoto(expresion.falseLabel);
+          expresion.retornoLbl = generador.newLabel();
+          generador.addLabel(expresion.retornoLbl);
+          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, false, this.getLinea(), this.getColumna()));
+          generador.declararVariable(tmp, expresion);
+          break;
+        case Tipo.STRING:
+          tipoFinal = new Type(this.tipo.tipo, null, 0);
+          expresion = new Retorno('-1', false, tipoFinal);
+          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, false, this.getLinea(), this.getColumna()));
+          generador.declararVariable(tmp, expresion);
+          break;
+        case Tipo.TYPE:
+          break;
+        case Tipo.ARRAY:
+          break;
+      }
     }
+
   }
 }

@@ -7,12 +7,13 @@ export abstract class Expresion {
   private linea: number;
   private columna: number;
   trueLabel : string;
-  falseLabel : string;
+  falseLabel: string;
+  retornoLabel: string;
 
   constructor(linea: number, columna: number) {
     this.linea = linea;
     this.columna = columna;
-    this.trueLabel = this.falseLabel = '';
+    this.trueLabel = this.falseLabel = this.retornoLabel = '';
   }
 
   public abstract traducir(entorno: Entorno): Retorno;

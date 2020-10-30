@@ -41,7 +41,7 @@ export class Asignacion extends Instruccion {
         'Semántico', "Error en asignacion: " + entorno.getTipoDato(expresion.getTipo()) + " no es asignable a " + entorno.getTipoDato(variable.getTipo().getTipo()));
     }
 
-    if (tipo == Tipo.BOOLEAN || tipo == Tipo.NUMBER) {
+    if (tipo == Tipo.BOOLEAN || tipo == Tipo.NUMBER || tipo == Tipo.STRING) {
       while (entorno != null) {
         if (entorno.variables.has(this.id)) {
           let generador = Generador.getInstance();
@@ -51,7 +51,7 @@ export class Asignacion extends Instruccion {
         entorno = entorno.anterior;
       }
       throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "Error en asignacion: variable " + this.id + " no ha sido declarada.");
-    } else {
+    } else{
 
     }
 

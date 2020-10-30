@@ -16,24 +16,15 @@ export enum Tipo {
 }
 
 export const tipoDominante = [
-    //       NUMBER       STRING       BOOLEAN     NULL       ARRAY        TYPE
+    //       NUMBER       STRING       BOOLEAN 
     [//NUMBER
-        Tipo.NUMBER, Tipo.STRING, Tipo.NUMBER, Tipo.NUMBER, Tipo.STRING, Tipo.STRING
+        Tipo.NUMBER, Tipo.STRING, Tipo.NUMBER
     ],
     [//STRING
-        Tipo.STRING, Tipo.STRING, Tipo.STRING, Tipo.STRING, Tipo.STRING, Tipo.STRING
+        Tipo.STRING, Tipo.STRING, Tipo.STRING
     ],
     [//BOOLEAN
-        Tipo.NUMBER, Tipo.STRING, Tipo.NUMBER, Tipo.NUMBER, Tipo.STRING, Tipo.STRING
-    ],
-    [ //NULL
-        Tipo.NUMBER, Tipo.STRING, Tipo.NUMBER, Tipo.NUMBER, Tipo.STRING, Tipo.STRING
-    ],
-    [ //ARRAY
-        Tipo.STRING, Tipo.STRING, Tipo.STRING, Tipo.STRING, Tipo.STRING, Tipo.STRING
-    ],
-    [ //TYPE
-        Tipo.STRING, Tipo.STRING, Tipo.STRING, Tipo.STRING, Tipo.STRING, Tipo.STRING
+        Tipo.NUMBER, Tipo.STRING, Tipo.UNDEFINED
     ]
 ];
 
