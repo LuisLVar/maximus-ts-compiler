@@ -24,6 +24,7 @@ export class While extends Instruccion {
     } else { 
       newEntorno.break = condicion.falseLabel;
       newEntorno.continue = labelWhile;
+      newEntorno.size = entorno.size;
       generador.addLabel(condicion.trueLabel);
       this.cuerpo.traducir(newEntorno);
       generador.addGoto(labelWhile);

@@ -18,6 +18,7 @@ export class DoWhile extends Instruccion {
     generador.addComment(' --------- Estructura de Control: DoWhile ----------');
     newEntorno.continue = this.condicion.trueLabel = generador.newLabel();
     newEntorno.break = this.condicion.falseLabel = generador.newLabel();
+    newEntorno.size = entorno.size;
     generador.addLabel(this.condicion.trueLabel);
     this.cuerpo.traducir(newEntorno);
     const condicion = this.condicion.traducir(entorno);

@@ -19,7 +19,7 @@ export class Switch extends Instruccion {
 
   public traducir(entorno: Entorno) {
     const expresion = this.condicion.traducir(entorno);
-    const nuevoEntorno = new Entorno(entorno);
+    const newEntorno = new Entorno(entorno);
     let casesLocales = new Array();
     let defaults = new Array();
 
@@ -62,10 +62,10 @@ export class Switch extends Instruccion {
     generador.addGoto(defaultLabel);
 
     for (let i = 0; i < casesLocales.length; i++) { 
-      let newEntorno = new Entorno(entorno);
       newEntorno.break = labelBreak;
-      generador.addLabel(casesLocales[i].labelTrue);
       newEntorno.continue = entorno.continue;
+      newEntorno.size = entorno.size;
+      generador.addLabel(casesLocales[i].labelTrue);
       casesLocales[i].traducir(newEntorno);
     }
 

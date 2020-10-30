@@ -28,6 +28,7 @@ export class For extends Instruccion {
     } else { 
       newEntorno.break = condicion.falseLabel;
       newEntorno.continue = labelFor;
+      newEntorno.size = entorno.size;
       generador.addLabel(condicion.trueLabel);
       this.cuerpo.traducir(newEntorno);
       this.asignacion.traducir(newEntorno);
