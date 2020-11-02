@@ -38,8 +38,25 @@ export class ConsolaComponent implements OnInit {
     Generador.getInstance().limpiarGenerador();
     try {
       let global = new Entorno(null);
+      const generador = Generador.getInstance();
 
-      //Pasada, trauccion C3D
+      //Escribir encabezado
+      generador.setEncabezado();
+
+
+      //Escribir Funciones Nativas
+      generador.nativaPrintString();
+
+
+      //Escribir Funciones
+
+
+      //Escribir Types
+
+      //Add Main
+      generador.addMain();
+
+      //Pasada, trauccion C3D    -- Escribir Main
       for (let instruccion of ast) {
         try {
           if (instruccion instanceof Instruccion) {
@@ -54,9 +71,17 @@ export class ConsolaComponent implements OnInit {
         alert("Compilacion con errores!");
       }
 
-      let code = Generador.getInstance().getCode();
-      consolaGlobal.salida = code;
+      //Incluir temporales
+      generador.declararTemporales();
+
       
+      //Concluir Main
+      generador.addMainEnd();
+
+
+      let code = generador.getCode();
+      consolaGlobal.salida = code;
+
 
     } catch (error) {
       console.log(error);

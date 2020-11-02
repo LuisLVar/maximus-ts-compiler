@@ -6,14 +6,12 @@ export class Generador {
   private temporal: number;
   private label: number;
   private code: string[];
-  private finalCode: string[];
   private tmpActivos: Set<string>;
   private temporales: string[];
 
   private constructor() {
     this.temporal = this.label = 0;
     this.code = new Array();
-    this.finalCode = new Array();
     this.tmpActivos = new Set();
     this.temporales = new Array();
 
@@ -34,14 +32,12 @@ export class Generador {
   public limpiarGenerador() {
     this.temporal = this.label = 0;
     this.code = new Array();
-    this.finalCode = new Array();
     this.tmpActivos = new Set();
     this.temporales = new Array();
   }
 
   public getCode(): string {
-    this.setEncabezado();
-    return this.finalCode.join('\n');
+    return this.code.join('\n');
   }
 
   public newTmp() {
@@ -63,28 +59,29 @@ export class Generador {
   }
 
   setEncabezado() {
-    this.finalCode.push(`#include <stdio.h>`);
-    this.finalCode.push(`#include <math.h>\n`);
-    this.finalCode.push(`double heap[16000];`);
-    this.finalCode.push(`double stack[16000];`);
-    this.finalCode.push(`double p;`);
-    this.finalCode.push(`double h;`);
-    this.declararTemporales();
-    this.addMain();
+    this.code.push(`#include <stdio.h>`);
+    this.code.push(`#include <math.h>\n`);
+    this.code.push(`double heap[16000];`);
+    this.code.push(`double stack[16000];`);
+    this.code.push(`double p;`);
+    this.code.push(`double h;`);  
   }
 
   declararTemporales() {
     if (this.temporales.length > 0) {
       let codigo = 'double ' + this.temporales.join(',') + ";";
-      this.finalCode.push(codigo);
+      // this.code.push(codigo);
+      this.code.splice(6, 0, codigo);
     }
   }
 
   addMain() {
-    this.finalCode.push(`\nvoid main(){`);
-    Array.prototype.push.apply(this.finalCode, this.code);
-    this.finalCode.push(`return;`);
-    this.finalCode.push(`}`);
+    this.code.push(`\nvoid main(){`);
+  }
+
+  addMainEnd() { 
+    this.code.push(`return;`);
+    this.code.push(`}`);
   }
 
   Imprimir(valor: Retorno) {
@@ -92,6 +89,7 @@ export class Generador {
     if (tipo == Tipo.NUMBER) {
       this.code.push(`printf("%f", (double)${valor.getValor()});`);
     } else if (tipo == Tipo.BOOLEAN) {
+      this.addComment("--------- Print Boolean --------------");
       this.addLabel(valor.trueLabel);
       this.code.push(`printf("true");`);
       let label = this.newLabel();
@@ -99,31 +97,19 @@ export class Generador {
       this.addLabel(valor.falseLabel);
       this.code.push(`printf("false");`);
       this.addLabel(label);
+      this.addComment("--------- Print Boolean --------------");
 
     } else if (tipo == Tipo.NULL) {
       this.code.push(`printf("null");`);
 
     } else if (tipo == Tipo.STRING) {
       this.addComment("--------- Print String --------------");
-      let label = this.newLabel();
-      let tmpH = this.newTmp();
-      this.addExpresion(tmpH, valor.getValor());
-      let labelNull = this.newLabel();
-      this.addIf(tmpH, '-1', '==', labelNull);
-      this.addLabel(label);
       let tmp = this.newTmp();
-      this.getFromHeap(tmp, tmpH);
-      let labelTrue = this.newLabel();
-      let labelFalse = this.newLabel();
-      this.addIf(tmp, '-1', '!=', labelTrue);
-      this.addGoto(labelFalse);
-      this.addLabel(labelTrue);
-      this.code.push(`printf("%c", (int)${tmp});`);
-      this.addExpresion(tmpH, tmpH, '+', 1);
-      this.addGoto(label);
-      this.addLabel(labelNull);
-      this.code.push(`printf("null");`);
-      this.addLabel(labelFalse);
+      this.addExpresion(tmp, 'p', '+', '1');
+      this.setToStack(tmp, valor.getValor());
+      this.addExpresion('p', 'p', '+', '1');
+      this.code.push("_nativaPrintString();");
+      this.addExpresion('p', 'p', '-', '1');
       this.addComment("--------- Fin Print String --------------");
     }
   }
@@ -240,10 +226,36 @@ export class Generador {
     this.nextHeap();
   }
 
-  nativaPrintString(valor: any) { 
-    this.code.push(`void _nativaPrintString(){\n`);
 
+  // String nativa: dos parametos, dos concatenaciones.
+  nativaPrintString() { 
+    this.code.push("\n");
+    this.addComment("--------- Print String Nativa --------------");
+    this.code.push(`\nvoid _nativaPrintString(){`);
+    let tmpParam1 = this.newTmp();
+    this.addExpresion(tmpParam1, 'p', '+', '0');  
+    let label = this.newLabel();
+    let tmpH = this.newTmp();
+    this.getFromStack(tmpH, tmpParam1);
+    let labelNull = this.newLabel();
+    this.addIf(tmpH, '-1', '==', labelNull);
+    this.addLabel(label);
+    let tmp = this.newTmp();
+    this.getFromHeap(tmp, tmpH);
+    let labelTrue = this.newLabel();
+    let labelFalse = this.newLabel();
+    this.addIf(tmp, '-1', '!=', labelTrue);
+    this.addGoto(labelFalse);
+    this.addLabel(labelTrue);
+    this.code.push(`printf("%c", (int)${tmp});`);
+    this.addExpresion(tmpH, tmpH, '+', 1);
+    this.addGoto(label);
+    this.addLabel(labelNull);
+    this.code.push(`printf("null");`);
+    this.addLabel(labelFalse);
+    this.code.push(`return;`);
     this.code.push(`}\n`);
+    this.addComment("--------- Fin Print String --------------");
   }
 
 }
