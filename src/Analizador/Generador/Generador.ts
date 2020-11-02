@@ -5,7 +5,7 @@ export class Generador {
   private static generador: Generador;
   private temporal: number;
   private label: number;
-  private code: string[];
+  code: string[];
   private tmpActivos: Set<string>;
   private temporales: string[];
 
@@ -256,6 +256,43 @@ export class Generador {
     this.code.push(`return;`);
     this.code.push(`}\n`);
     this.addComment("--------- Fin Print String --------------");
+  }
+
+
+  // POTENCIA
+  nativaPotencia() { 
+    this.code.push("\n");
+    this.addComment("--------- Potencia Nativa --------------");
+    this.code.push(`\nvoid _nativaPotencia(){`);
+    let t1 = this.newTmp();
+    this.addExpresion(t1, 'p', '+', '1');
+    let t2 = this.newTmp();
+    this.getFromStack(t2, t1);
+    let t3 = this.newTmp();
+    this.addExpresion(t3, 'p', '+', '2');
+    let t4 = this.newTmp();
+    this.getFromStack(t4, t3);
+    let t5 = this.newTmp();
+    this.addExpresion(t5, '0');
+    let t6 = this.newTmp();
+    this.addExpresion(t6, '1');
+    let l0 = this.newLabel();
+    this.addLabel(l0);
+    let l1 = this.newLabel();
+    let l2 = this.newLabel();
+    this.addIf(t5, t4, '<', l1);
+    this.addGoto(l2);
+    this.addLabel(l1);
+    this.addExpresion(t6, t6, '*', t2);
+    this.addExpresion(t5, t5, '+', '1');
+    this.addGoto(l0);
+    this.addLabel(l2);
+    let t7 = this.newTmp();
+    this.addExpresion(t7, 'p');
+    this.setToStack(t7, t6);
+    this.code.push("return;");
+    this.code.push("}\n");
+    this.addComment("--------- Fin Potencia Nativa --------------");
   }
 
 }

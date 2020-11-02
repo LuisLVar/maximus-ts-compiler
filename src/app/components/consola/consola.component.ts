@@ -46,6 +46,7 @@ export class ConsolaComponent implements OnInit {
 
       //Escribir Funciones Nativas
       generador.nativaPrintString();
+      generador.nativaPotencia();
 
 
       //Escribir Funciones

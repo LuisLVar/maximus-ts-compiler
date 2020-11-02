@@ -231,7 +231,36 @@ export class Aritmetica extends Expresion {
       }
     }
     else if (this.tipo == tipoAritmetica.POT) {
+      if (leftValue.getTipo() == Tipo.NUMBER && rightValue.getTipo() == Tipo.NUMBER) {
+        generador.addComment("--------- Inicio Potencia --------------");
+        let tmp = generador.newTmp();
+        generador.addExpresion(tmp, 'p', '+', '3');  // cambio simulado de ambito
+  
+        let tmpParam1 = generador.newTmp();
+        generador.addExpresion(tmpParam1, tmp, '+', '1');
+        generador.setToStack(tmpParam1, leftValue.getValor());
+  
+        let tmpParam2 = generador.newTmp();
+        generador.addExpresion(tmpParam2, tmp, '+', '2');
+        generador.setToStack(tmpParam2, rightValue.getValor());
+  
+        generador.addExpresion('p', 'p', '+', '3');  // Cambio de Ambito
+  
+        generador.code.push("_nativaPotencia();");
+  
+        let tmpRI = generador.newTmp();
+        generador.addExpresion(tmpRI, 'p');
+  
+        let tmpR = generador.newTmp();
+        generador.getFromStack(tmpR, tmpRI);
+  
+        generador.addExpresion('p', 'p', '-', '3');  // Cambio de Ambito
+        generador.addComment("--------- Fin Potencia --------------");
+        result = new Retorno(tmpR, true, new Type(Tipo.NUMBER, null, 0));
 
+      } else { 
+        throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede obtener potencia de: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
+      }
     }
     return result;
   }
