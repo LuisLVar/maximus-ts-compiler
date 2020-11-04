@@ -47,7 +47,14 @@
     "src/Analizador/Instrucciones/Gotos/Continue.ts",
     "src/Analizador/Instrucciones/Control/Switch.ts",
     "src/Analizador/Instrucciones/Control/Case.ts",
-    
+
+    //Funciones 
+    "src/Analizador/Instrucciones/Funciones/Funcion.ts",
+    "src/Analizador/Instrucciones/Funciones/Parametro.ts",
+    "src/Analizador/Instrucciones/Gotos/Return.ts",
+    "src/Analizador/Expresion/Accesos/Call.ts",
+
+
   ],
   "include": [
     "src/**/*.d.ts"

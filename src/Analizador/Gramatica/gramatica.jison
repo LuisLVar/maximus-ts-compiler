@@ -14,6 +14,12 @@
     const {Continue} = require('../Instrucciones/Gotos/Continue');
     const {Switch} = require('../Instrucciones/Control/Switch');
     const {Case, tipoCase} = require('../Instrucciones/Control/Case');
+
+    //Funciones
+    const {Funcion} = require('../Instrucciones/Funciones/Funcion');
+    const {Call} = require('../Expresion/Accesos/Call');
+    const {Parametro} = require('../Instrucciones/Funciones/Parametro');
+    const {Return} = require('../Instrucciones/Gotos/Return');
     
     
     //Expresiones
@@ -448,6 +454,65 @@ Case2
     }
 ;
 
+NTFuncion
+    : TFUNCTION ID PARIZQ PARDER TipoFuncion CuerpoFuncion  
+    {
+        $$ = new Funcion($2, $6, new Array(), $5, @1.first_line, @1.first_column);
+    }
+    | TFUNCTION ID PARIZQ Parametros PARDER TipoFuncion CuerpoFuncion 
+    {
+        $$ = new Funcion($2, $7, $4, $6, @1.first_line, @1.first_column);
+    }
+;
+
+TipoFuncion
+    : DOSPUNTOS Tipo
+    {
+        $$ = $2;
+    }
+    | /*epsilon*/
+    {
+        $$ = 11;
+    }
+;
+
+
+NTCall
+    : ID PARIZQ PARDER
+    {
+        $$ = new Call($1, new Array(), @1.first_line, @1.first_column);
+    }
+    | ID PARIZQ ListaExp PARDER
+    {
+        $$ = new Call($1, $3, @1.first_line, @1.first_column);
+    }
+;
+
+Param
+    : ID DOSPUNTOS Tipo Dimensiones
+    {
+        let dimPar = $4;
+        let param = new Parametro($1, $3);
+        if(dimPar != 0){
+            param = new Parametro($1, {tipo: $3, dim: dimPar});
+        }
+        $$ = param;
+    }
+    | ID
+    {
+        $$ = new Parametro($1, 9);
+    }
+;
+
+NTReturn
+    : TRETURN Expresion
+    {
+        $$ = new Return($2, @1.first_line, @1.first_column);
+    }
+    | TRETURN {
+        $$ = new Return(new Literal(0, @1.first_line, @1.first_column, 6), @1.first_line, @1.first_column);
+    }
+;
 
 
 ListaExp
