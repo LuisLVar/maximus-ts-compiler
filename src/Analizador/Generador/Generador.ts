@@ -295,4 +295,29 @@ export class Generador {
     this.addComment("--------- Fin Potencia Nativa --------------");
   }
 
+
+  // ---------------------------- FUNCIONES -----------------------------
+
+  newFuncion(callID: any, parametros: any) { 
+    this.code.push("\n");
+    this.addComment("--------- Declaracion Funcion --------------");
+
+    this.code.push(`void ${callID}(){`);
+
+
+  }
+
+
+  finalizarFuncion() { 
+    this.code.push("}\n");
+    this.addComment("--------- Fin Declaracion Funcion  --------------");
+  }
+
+
+
+
+
+
+
+
 }

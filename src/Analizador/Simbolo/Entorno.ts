@@ -1,18 +1,14 @@
 import { Simbolo } from "./Simbolo";
 import { Tipo, tipoDominante, Type } from "../Utils/Tipo";
-import { env } from "process";
 import { Error_ } from "../Error/Error";
-// import { Funcion } from "../Instrucciones/Funcion";
-// import { Type } from "../Instrucciones/Type";
-import { tipoDeclaracion } from "../Instrucciones/Variables/Declaracion";
-import { Generador } from '../Generador/Generador';
-import { Retorno } from '../Utils/Retorno';
+import { Funcion } from "../Instrucciones/Funciones/Funcion";
+import { SimboloFuncion } from "./SimboloFuncion";
 
 
 export class Entorno {
   variables: Map<string, Simbolo>;
   anterior: Entorno | null;
-  // private funciones: Map<string, Funcion>
+  funciones: Map<string, SimboloFuncion>
   // private types: Map<string, Type>
 
   size: number;
@@ -22,7 +18,7 @@ export class Entorno {
   constructor(anterior: Entorno | null) {
     this.variables = new Map();
     this.anterior = anterior;
-    // this.funciones = new Map();
+    this.funciones = new Map();
     // this.types = new Map();
     this.size = anterior?.size || 0;
   }
@@ -31,9 +27,9 @@ export class Entorno {
     return this.variables;
   }
 
-  // public getFunciones() {
-  //   return this.funciones;
-  // }
+  public getFunciones() {
+    return this.funciones;
+  }
 
   // public getTypes() {
   //   return this.types;
@@ -78,5 +74,29 @@ export class Entorno {
       return tipo;
     }
   }
+
+    // FUNCIONES
+
+    public guardarFuncion(id: string, funcion: any, callID: string, linea: number, columna: number) {
+      let entorno: Entorno | null = this;
+      console.log('entra');
+      if (entorno != null) {
+        if (entorno.funciones.has(id)) {
+          throw new Error_(linea, columna, 'Semántico', "Error en declaracion: funcion " + id + " ya ha sido declarada.");
+        }
+      }
+      this.funciones.set(id, new SimboloFuncion(funcion, callID));
+    }
+  
+    public getFuncion(id: string, linea: number, columna: number): SimboloFuncion | undefined {
+      let entorno: Entorno | null = this;
+      while (entorno != null) {
+        if (entorno.funciones.has(id)) {
+          return entorno.funciones.get(id);
+        }
+        entorno = entorno.anterior;
+      }
+      throw new Error_(linea, columna, 'Semántico', "Error en llamada: funcion " + id + " no esta definida.");
+    }
 
 }

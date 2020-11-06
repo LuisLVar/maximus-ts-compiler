@@ -53,6 +53,7 @@
     "src/Analizador/Instrucciones/Funciones/Parametro.ts",
     "src/Analizador/Instrucciones/Gotos/Return.ts",
     "src/Analizador/Expresion/Accesos/Call.ts",
+    "src/Analizador/Expresion/Accesos/SimboloFuncion.ts",
 
 
   ],

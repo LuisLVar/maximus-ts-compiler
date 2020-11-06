@@ -1,5 +1,15 @@
+import { Tipo, Type } from "src/Analizador/Utils/Tipo";
+
 export class Parametro { 
+
+  tipoType: Type;
   constructor(private id: string, private tipo: any) { 
+    if (tipo.dim > 0) {
+      this.tipoType = new Type(Tipo.ARRAY, tipo.tipo, tipo.dim);
+    } else { 
+      this.tipoType = new Type(tipo.tipo, null, tipo.dim);
+    }
+    console.log(this.tipoType);
     
   }
 
@@ -8,7 +18,11 @@ export class Parametro {
   }
 
   getTipo() { 
-    return this.tipo;
+    return this.tipoType.getTipo();
+  }
+
+  getType() { 
+    return this.tipoType;
   }
 } 
 

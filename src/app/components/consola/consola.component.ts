@@ -10,6 +10,7 @@ import { Generador } from 'src/Analizador/Generador/Generador';
 
 // Ejecucion
 import Parser from '../../../Analizador/Gramatica/gramatica';
+import { Funcion } from 'src/Analizador/Instrucciones/Funciones/Funcion';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class ConsolaComponent implements OnInit {
     this.console.salida = "";
     Generador.getInstance().limpiarGenerador();
     try {
-      let global = new Entorno(null);
+      const global = new Entorno(null);
       const generador = Generador.getInstance();
 
       //Escribir encabezado
@@ -50,7 +51,16 @@ export class ConsolaComponent implements OnInit {
 
 
       //Escribir Funciones
-
+      for (let instruccion of ast) {
+        try {
+          if (instruccion instanceof Funcion) {
+            instruccion.traducir(global);
+          }
+        } catch (error) {
+          console.log(error);
+          errores.push(error);
+        }
+      }
 
       //Escribir Types
 
@@ -60,7 +70,7 @@ export class ConsolaComponent implements OnInit {
       //Pasada, trauccion C3D    -- Escribir Main
       for (let instruccion of ast) {
         try {
-          if (instruccion instanceof Instruccion) {
+          if (instruccion instanceof Instruccion && !(instruccion instanceof Funcion)) {
             instruccion.traducir(global);
           }
         } catch (error) {

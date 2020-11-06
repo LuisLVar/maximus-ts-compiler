@@ -171,6 +171,18 @@ Instrucciones
     }
 ;
 
+InstruccionesF
+    : InstruccionesF InstruccionF
+    {
+        $1.push($2);
+        $$ = $1;
+    }
+    | InstruccionF{
+        $$ = [$1];
+    }
+;
+
+
 
 Instruccion
     : Imprimir 
@@ -217,6 +229,74 @@ Instruccion
     | CONTINUE PUNTOYCOMA
     {
         $$ = new Continue(@1.first_line, @1.first_column);
+    }
+    | NTFuncion
+    {
+        $$ = $1;
+    }
+    | NTCall PUNTOYCOMA
+    {
+        $$ = $1;
+    }
+    | NTReturn PUNTOYCOMA
+    {
+        $$ = $1;
+    }
+    | error Recuperar
+    { 
+        errores.push(new Error_(@1.first_line, @1.first_column, "Sintáctico", "Se esperaba: "+ yytext));
+    }
+;
+
+InstruccionF
+    : Imprimir 
+    {
+        $$ = $1;
+    }    
+    | Declaracion
+    {
+        $$ = $1;
+    
+    }
+    | Asignacion
+    {
+        $$ = $1;
+    }
+    | NTIf
+    {
+        $$ = $1;
+    }
+    | Cuerpo
+    {
+        $$ = $1;
+    }
+    | NTWhile
+    {
+        $$ = $1;
+    }
+    | NTDoWhile
+    {
+        $$ = $1;
+    }
+    | NTFor
+    {
+        $$ = $1;
+    }
+    | NTSwitch
+    {
+        $$ = $1;
+    }
+    | NTFuncion
+    {
+        $$ = $1;
+    }
+    | NTCall PUNTOYCOMA
+    {
+        $$ = $1;
+    }
+    | NTReturn PUNTOYCOMA
+    {
+        $$ = $1;
     }
     | error Recuperar
     { 
@@ -382,6 +462,17 @@ Cuerpo
     }
 ;
 
+CuerpoFuncion
+    : LLAVEIZQ InstruccionesF LLAVEDER
+    {
+        $$ = new Cuerpo($2, @1.first_line, @1.first_column);
+    }
+    | LLAVEIZQ LLAVEDER
+    {
+        $$ = new Cuerpo(new Array(), @1.first_line, @1.first_column);
+    }
+;
+
 NTFor
     : TFOR PARIZQ AorD  Expresion PUNTOYCOMA AsignacionFor PARDER Cuerpo
     {
@@ -488,14 +579,21 @@ NTCall
     }
 ;
 
+Parametros
+    : Parametros COMA Param {
+        $1.push($3);
+        $$ = $1;
+    }
+    | Param{
+        $$ = [$1];
+    }
+;
+
 Param
     : ID DOSPUNTOS Tipo Dimensiones
     {
         let dimPar = $4;
-        let param = new Parametro($1, $3);
-        if(dimPar != 0){
-            param = new Parametro($1, {tipo: $3, dim: dimPar});
-        }
+        let param = new Parametro($1, {tipo: $3, dim: dimPar});
         $$ = param;
     }
     | ID
