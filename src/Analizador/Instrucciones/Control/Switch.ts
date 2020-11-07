@@ -65,6 +65,8 @@ export class Switch extends Instruccion {
       newEntorno.break = labelBreak;
       newEntorno.continue = entorno.continue;
       newEntorno.size = entorno.size;
+      newEntorno.esFuncion = entorno.esFuncion;
+      newEntorno.retorno = entorno.retorno;
       generador.addLabel(casesLocales[i].labelTrue);
       casesLocales[i].traducir(newEntorno);
     }

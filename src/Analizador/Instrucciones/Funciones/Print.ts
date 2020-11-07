@@ -12,9 +12,8 @@ export class Print extends Instruccion {
   public traducir(entorno: Entorno) {
     let generador = Generador.getInstance();
     for (let e of this.values) { 
-      console.log(e);
       let valor = e.traducir(entorno);
-      generador.Imprimir(valor);
+      generador.Imprimir(valor, entorno.size);
     }
     generador.addEspacio();
   }

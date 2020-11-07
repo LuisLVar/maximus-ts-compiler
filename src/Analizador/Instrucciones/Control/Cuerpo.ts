@@ -18,9 +18,17 @@ export class Cuerpo extends Instruccion {
     newEntorno.break = entorno.break;
     newEntorno.continue = entorno.continue;
     newEntorno.size = entorno.size;
+    newEntorno.retorno = entorno.retorno;
+    newEntorno.esFuncion = entorno.esFuncion;
     for (const instruccion of this.cuerpo) {
       try {
-        const retorno = instruccion.traducir(newEntorno);
+        let retorno;
+        if (entorno.esFuncion) {
+          retorno = instruccion.traducir(entorno);
+        } else { 
+          retorno = instruccion.traducir(newEntorno);
+        }
+        
         if (retorno != null || retorno != undefined) { 
           return retorno;
         }

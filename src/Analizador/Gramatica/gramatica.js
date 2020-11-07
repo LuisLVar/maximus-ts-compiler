@@ -183,7 +183,7 @@ case 42:
         this.$ = 5;
     
 break;
-case 43:
+case 43: case 80:
 
         this.$ = 6;
     
@@ -299,11 +299,6 @@ break;
 case 78:
 
         this.$ = new Funcion($$[$0-5], $$[$0], $$[$0-3], $$[$0-1], _$[$0-6].first_line, _$[$0-6].first_column);
-    
-break;
-case 80:
-
-        this.$ = 11;
     
 break;
 case 81:

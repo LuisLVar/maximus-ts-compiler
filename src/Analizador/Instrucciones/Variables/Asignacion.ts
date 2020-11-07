@@ -20,10 +20,28 @@ export class Asignacion extends Instruccion {
   }
 
   public traducir(entorno: Entorno) {
-    let variable = entorno.getVariable(this.id);
+    let variableTotal = entorno.getVariable(this.id);
+    let variable = variableTotal.variable;
     let generador = Generador.getInstance();
+
+    // let tmp = generador.newTmp();
+    // generador.addExpresion(tmp, 'p', '+', variable.getPosRelativa());
+
     let tmp = generador.newTmp();
-    generador.addExpresion(tmp, 'p', '+', variable.getPosRelativa());
+    if (entorno.esFuncion && variableTotal.global) {
+        //Obtengo P global
+        let tmpG = generador.newTmp();
+        generador.addExpresion(tmpG, 'p', '+', '1');
+        let tmpG1 = generador.newTmp();
+        generador.getFromStack(tmpG1, tmpG);
+        generador.addExpresion(tmp, tmpG1, '+', variable.getPosRelativa());
+    } else { 
+        generador.addExpresion(tmp, 'p', '+', variable.getPosRelativa());
+    }
+
+
+
+
     let expresion = this.valor.traducir(entorno);
     let tipoType = variable.getTipo();
     let tipo = tipoType.tipo;

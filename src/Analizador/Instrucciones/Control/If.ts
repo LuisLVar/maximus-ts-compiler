@@ -21,6 +21,8 @@ export class If extends Instruccion {
     newEntorno.break = entorno.break;
     newEntorno.continue = entorno.continue;
     newEntorno.size = entorno.size;
+    newEntorno.esFuncion = entorno.esFuncion;
+    newEntorno.retorno = entorno.retorno;
     if (condicion.getTipo() == Tipo.BOOLEAN) {
       generador.addLabel(condicion.trueLabel);
       this.cuerpoIf.traducir(newEntorno);

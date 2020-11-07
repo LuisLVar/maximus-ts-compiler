@@ -51,16 +51,16 @@ export class ConsolaComponent implements OnInit {
 
 
       //Escribir Funciones
-      for (let instruccion of ast) {
-        try {
-          if (instruccion instanceof Funcion) {
-            instruccion.traducir(global);
-          }
-        } catch (error) {
-          console.log(error);
-          errores.push(error);
-        }
-      }
+      // for (let instruccion of ast) {
+      //   try {
+      //     if (instruccion instanceof Funcion) {
+      //       instruccion.traducir(global);
+      //     }
+      //   } catch (error) {
+      //     console.log(error);
+      //     errores.push(error);
+      //   }
+      // }
 
       //Escribir Types
 
@@ -70,7 +70,7 @@ export class ConsolaComponent implements OnInit {
       //Pasada, trauccion C3D    -- Escribir Main
       for (let instruccion of ast) {
         try {
-          if (instruccion instanceof Instruccion && !(instruccion instanceof Funcion)) {
+          if (instruccion instanceof Instruccion) {
             instruccion.traducir(global);
           }
         } catch (error) {
@@ -89,6 +89,10 @@ export class ConsolaComponent implements OnInit {
       //Concluir Main
       generador.addMainEnd();
 
+      const inicio = generador.code.slice(0, 7);
+      const fin = generador.code.slice(7, generador.code.length);
+      const codigo = inicio.concat(generador.codeFunciones, fin);
+      generador.code = codigo;
 
       let code = generador.getCode();
       consolaGlobal.salida = code;

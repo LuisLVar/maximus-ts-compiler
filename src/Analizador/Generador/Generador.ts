@@ -1,20 +1,31 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Retorno } from '../Utils/Retorno';
 import { Tipo } from '../Utils/Tipo';
+
+enum codigo {
+  CODE = 0,
+  FUNCION = 1,
+  TYPE = 2
+}
 
 export class Generador {
   private static generador: Generador;
   private temporal: number;
   private label: number;
   code: string[];
+  codeFunciones: string[];
   private tmpActivos: Set<string>;
   private temporales: string[];
+  estado: number;
+  
 
   private constructor() {
     this.temporal = this.label = 0;
     this.code = new Array();
+    this.codeFunciones = new Array();
     this.tmpActivos = new Set();
     this.temporales = new Array();
-
+    this.estado = 0;
   }
 
   public static getInstance() {
@@ -32,6 +43,7 @@ export class Generador {
   public limpiarGenerador() {
     this.temporal = this.label = 0;
     this.code = new Array();
+    this.codeFunciones = new Array();
     this.tmpActivos = new Set();
     this.temporales = new Array();
   }
@@ -54,8 +66,19 @@ export class Generador {
     return label;
   }
 
+  setCode() { 
+    let code;
+    if (this.estado == codigo.CODE) {
+      code = this.code;
+    } else if (this.estado == codigo.FUNCION) { 
+      code = this.codeFunciones;
+    }
+    return code;
+  }
+
   addLabel(label: string) {
-    this.code.push(`${label}:`);
+    const code = this.setCode();
+    code.push(`${label}:`);
   }
 
   setEncabezado() {
@@ -70,7 +93,7 @@ export class Generador {
   declararTemporales() {
     if (this.temporales.length > 0) {
       let codigo = 'double ' + this.temporales.join(',') + ";";
-      // this.code.push(codigo);
+      // code.push(codigo);
       this.code.splice(6, 0, codigo);
     }
   }
@@ -84,38 +107,40 @@ export class Generador {
     this.code.push(`}`);
   }
 
-  Imprimir(valor: Retorno) {
+  Imprimir(valor: Retorno, size: any) {
+    const code = this.setCode();
     let tipo = valor.getTipo();
     if (tipo == Tipo.NUMBER) {
-      this.code.push(`printf("%f", (double)${valor.getValor()});`);
+      code.push(`printf("%f", (double)${valor.getValor()});`);
     } else if (tipo == Tipo.BOOLEAN) {
       this.addComment("--------- Print Boolean --------------");
       this.addLabel(valor.trueLabel);
-      this.code.push(`printf("true");`);
+      code.push(`printf("true");`);
       let label = this.newLabel();
       this.addGoto(label);
       this.addLabel(valor.falseLabel);
-      this.code.push(`printf("false");`);
+      code.push(`printf("false");`);
       this.addLabel(label);
       this.addComment("--------- Print Boolean --------------");
 
     } else if (tipo == Tipo.NULL) {
-      this.code.push(`printf("null");`);
+      code.push(`printf("null");`);
 
     } else if (tipo == Tipo.STRING) {
       this.addComment("--------- Print String --------------");
       let tmp = this.newTmp();
-      this.addExpresion(tmp, 'p', '+', '1');
+      this.addExpresion(tmp, 'p', '+', size);
       this.setToStack(tmp, valor.getValor());
-      this.addExpresion('p', 'p', '+', '1');
-      this.code.push("_nativaPrintString();");
-      this.addExpresion('p', 'p', '-', '1');
+      this.addExpresion('p', 'p', '+', size);
+      code.push("_nativaPrintString();");
+      this.addExpresion('p', 'p', '-', size);
       this.addComment("--------- Fin Print String --------------");
     }
   }
 
   addEspacio() {
-    this.code.push(`printf("\\n");`);
+    const code = this.setCode();
+    code.push(`printf("\\n");`);
   }
 
   liberarTmp(tmp: any) {
@@ -128,29 +153,35 @@ export class Generador {
   /* -----------    Expresiones  --------------- */
 
   addExpresion(asignable: string, left: any, operador: any = '', right: any = '') {
-    this.code.push(`${asignable} = ${left} ${operador} ${right};`);
+    const code = this.setCode();
+    code.push(`${asignable} = ${left} ${operador} ${right};`);
   }
 
   addModulo(tmp: any, left: any, right: any) {
-    this.code.push(`${tmp} = fmod(${left},${right});`);
+    const code = this.setCode();
+    code.push(`${tmp} = fmod(${left},${right});`);
   }
 
   addGoto(label: any) {
-    this.code.push(`goto ${label};`);
+    const code = this.setCode();
+    code.push(`goto ${label};`);
   }
 
   addIf(left: any, right: any, operador: string, label: string) {
-    this.code.push(`if (${left}${operador}${right}) goto ${label};`);
+    const code = this.setCode();
+    code.push(`if (${left}${operador}${right}) goto ${label};`);
   }
 
   /* ------------ Declaracion y Asignacion de Variables -------------- */
 
   setToStack(tmp: any, valor: any) {
-    this.code.push(`stack[(int)${tmp}]=${valor};`);
+    const code = this.setCode();
+    code.push(`stack[(int)${tmp}]=${valor};`);
   }
 
   getFromStack(tmp: any, posicion: any) {
-    this.code.push(`${tmp} = stack[(int)${posicion}];`);
+    const code = this.setCode();
+    code.push(`${tmp} = stack[(int)${posicion}];`);
   }
 
   declararVariable(tmp: any, valor: Retorno) {
@@ -185,20 +216,24 @@ export class Generador {
   }
 
   addComment(texto: string) {
-    this.code.push(`// ${texto}`);
+    const code = this.setCode();
+    code.push(`// ${texto}`);
   }
 
   // ------------ HEAP -----------------
   nextHeap() {
-    this.code.push('h = h + 1;');
+    const code = this.setCode();
+    code.push('h = h + 1;');
   }
 
   getFromHeap(tmp: string, indice: string) {
-    this.code.push(`${tmp} = heap[(int)${indice}];`);
+    const code = this.setCode();
+    code.push(`${tmp} = heap[(int)${indice}];`);
   }
 
   setToHeap(indice: string, tmp: string) {
-    this.code.push(`heap[(int)${indice}] = ${tmp};`);
+    const code = this.setCode();
+    code.push(`heap[(int)${indice}] = ${tmp};`);
   }
 
   // ---  Booleanos
@@ -229,9 +264,11 @@ export class Generador {
 
   // String nativa: dos parametos, dos concatenaciones.
   nativaPrintString() { 
-    this.code.push("\n");
+    this.estado = codigo.FUNCION;
+    const code = this.setCode();
+    code.push("\n");
     this.addComment("--------- Print String Nativa --------------");
-    this.code.push(`\nvoid _nativaPrintString(){`);
+    code.push(`\nvoid _nativaPrintString(){`);
     let tmpParam1 = this.newTmp();
     this.addExpresion(tmpParam1, 'p', '+', '0');  
     let label = this.newLabel();
@@ -247,23 +284,26 @@ export class Generador {
     this.addIf(tmp, '-1', '!=', labelTrue);
     this.addGoto(labelFalse);
     this.addLabel(labelTrue);
-    this.code.push(`printf("%c", (int)${tmp});`);
+    code.push(`printf("%c", (int)${tmp});`);
     this.addExpresion(tmpH, tmpH, '+', 1);
     this.addGoto(label);
     this.addLabel(labelNull);
-    this.code.push(`printf("null");`);
+    code.push(`printf("null");`);
     this.addLabel(labelFalse);
-    this.code.push(`return;`);
-    this.code.push(`}\n`);
+    code.push(`return;`);
+    code.push(`}`);
     this.addComment("--------- Fin Print String --------------");
+    this.estado = codigo.CODE;
   }
 
 
   // POTENCIA
   nativaPotencia() { 
-    this.code.push("\n");
+    this.estado = codigo.FUNCION;
+    const code = this.setCode();
+    code.push("\n");
     this.addComment("--------- Potencia Nativa --------------");
-    this.code.push(`\nvoid _nativaPotencia(){`);
+    code.push(`\nvoid _nativaPotencia(){`);
     let t1 = this.newTmp();
     this.addExpresion(t1, 'p', '+', '1');
     let t2 = this.newTmp();
@@ -290,27 +330,32 @@ export class Generador {
     let t7 = this.newTmp();
     this.addExpresion(t7, 'p');
     this.setToStack(t7, t6);
-    this.code.push("return;");
-    this.code.push("}\n");
+    code.push("return;");
+    code.push("}");
     this.addComment("--------- Fin Potencia Nativa --------------");
+    this.estado = codigo.CODE;
   }
 
 
   // ---------------------------- FUNCIONES -----------------------------
 
   newFuncion(callID: any, parametros: any) { 
-    this.code.push("\n");
+    this.estado = codigo.FUNCION;
+    const code = this.setCode();
+    code.push("\n");
     this.addComment("--------- Declaracion Funcion --------------");
 
-    this.code.push(`void ${callID}(){`);
+    code.push(`void ${callID}(){`);
 
 
   }
 
 
   finalizarFuncion() { 
-    this.code.push("}\n");
+    const code = this.setCode();
+    code.push("}\n");
     this.addComment("--------- Fin Declaracion Funcion  --------------");
+    this.estado = codigo.CODE;
   }
 
 

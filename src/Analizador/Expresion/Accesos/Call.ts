@@ -1,5 +1,8 @@
 import { Error_ } from "src/Analizador/Error/Error";
 import { Generador } from "src/Analizador/Generador/Generador";
+import { SimboloFuncion } from "src/Analizador/Simbolo/SimboloFuncion";
+import { Retorno } from "src/Analizador/Utils/Retorno";
+import { Tipo, Type } from "src/Analizador/Utils/Tipo";
 import { Expresion } from "../../Abstractos/Expresion";
 import { Instruccion } from "../../Abstractos/Instruccion";
 import { Entorno } from "../../Simbolo/Entorno";
@@ -10,8 +13,10 @@ export class Call extends Instruccion{
         super(linea, columna);
     }
 
-    public traducir(entorno : Entorno) {
-        const funcion = entorno.getFuncion(this.id, this.getLinea(), this.getColumna());
+    public traducir(entorno: Entorno): Retorno {
+        console.log("Entro a un call");
+        const funcion: SimboloFuncion = entorno.getFuncion(this.id, this.getLinea(), this.getColumna());
+        console.log(funcion);
 
         //Funciones sin retorno, sencillas
         if (funcion.parametros.length != this.parametros.length) { 
@@ -31,12 +36,13 @@ export class Call extends Instruccion{
 	// t24=pila[t23]
     // p=p-1   --cambio de ámbito
         
+        
         const generador = Generador.getInstance();
         generador.addComment(`-------  Llamada a la funcion: ${funcion.id} -------`);
-        let i = 1;
+        let i = 2;
         //Cambio simulado de ambito
         let tmpAmbito = generador.newTmp();
-        generador.addExpresion(tmpAmbito, 'p', '+', funcion.size);
+        generador.addExpresion(tmpAmbito, 'p', '+', entorno.size);
         
         //Asignacion de parametros
         for (let param of this.parametros) { 
@@ -46,14 +52,23 @@ export class Call extends Instruccion{
             generador.asignarVariable(tmp, expresion);
             i++;
         }
-        //Cambio de ambito
-        generador.addExpresion('p', 'p', '+', funcion.size);
-        generador.code.push(`${funcion.callID}();`);
-        generador.addExpresion('p', 'p', '-', funcion.size);
-        generador.addComment("--------------------------------------");
-        
-        
 
+        let retorno: Retorno;
+
+        //Cambio de ambito
+        generador.addExpresion('p', 'p', '+', entorno.size);
+        generador.code.push(`${funcion.callID}();`);
+        if (funcion.tipo != Tipo.VOID) {
+            let tmp = generador.newTmp();
+            generador.getFromStack(tmp, 'p');
+            retorno =  new Retorno(tmp, true, new Type(funcion.tipo, null, 0));
+        } else { 
+            retorno = new Retorno('0', false, new Type(Tipo.VOID, null, 0));
+        }
+        generador.addExpresion('p', 'p', '-', entorno.size);
+        generador.addComment("--------------------------------------");
+
+        return retorno;
 
     }
 }

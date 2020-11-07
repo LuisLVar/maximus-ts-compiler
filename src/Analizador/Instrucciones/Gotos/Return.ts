@@ -6,15 +6,20 @@ import { Expresion } from "../../Abstractos/Expresion";
 import { Tipo } from "../../Utils/Tipo";
 import { Retorno } from "../../Utils/Retorno";
 
-export class Continue extends Instruccion{
+export class Return extends Instruccion {
 
-  constructor(private expresion: Expresion, linea : number, columna : number){
+  constructor(private expresion: Expresion, linea: number, columna: number) {
     super(linea, columna);
-}
+  }
 
-    traducir(entorno: Entorno) : Retorno{
-      let resultado = this.expresion.traducir(entorno);
-      let retorno : Retorno;
-      return retorno;
-    }
+  traducir(entorno: Entorno) {
+    const generador = Generador.getInstance();
+
+    const tmpRetorno = generador.newTmp();
+    generador.addExpresion(tmpRetorno, 'p');
+    let resultado = this.expresion.traducir(entorno);
+    generador.setToStack(tmpRetorno, resultado.getValor());
+    generador.addGoto(entorno.retorno);
+
+  }
 }

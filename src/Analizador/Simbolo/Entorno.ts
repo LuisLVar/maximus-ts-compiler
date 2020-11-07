@@ -14,6 +14,9 @@ export class Entorno {
   size: number;
   break: string | null;
   continue: string | null;
+  retorno: string | null;
+  esFuncion: boolean;
+  esGlobal: boolean;
 
   constructor(anterior: Entorno | null) {
     this.variables = new Map();
@@ -21,6 +24,7 @@ export class Entorno {
     this.funciones = new Map();
     // this.types = new Map();
     this.size = anterior?.size || 0;
+    this.esFuncion = false;
   }
 
   public getVariables() {
@@ -42,10 +46,12 @@ export class Entorno {
 
   public getVariable(id: string) {
     let entorno: Entorno | null = this;
+    let esGlobal = false;
     while (entorno != null) {
       if (entorno.variables.has(id)) {
-        return entorno.variables.get(id);
+        return { variable: entorno.variables.get(id), global: esGlobal};
       }
+      esGlobal = true;
       entorno = entorno.anterior;
     }
     return null;

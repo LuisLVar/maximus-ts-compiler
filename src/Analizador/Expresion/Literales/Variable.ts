@@ -12,7 +12,8 @@ export class Variable extends Expresion{
     }
 
     public traducir(entorno: Entorno): Retorno {
-        let  variable = entorno.getVariable(this.id);
+        let variableTotal = entorno.getVariable(this.id);
+        let variable = variableTotal.variable;
         let result: Retorno;
         if (variable == null) {
             throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "La variable '" + this.id + "' no ha sido declarada.");
@@ -22,7 +23,18 @@ export class Variable extends Expresion{
         const generador = Generador.getInstance();
 
         let tmp = generador.newTmp();
-        generador.addExpresion(tmp, 'p', '+', variable.getPosRelativa());
+        if (entorno.esFuncion && variableTotal.global) {
+            //Obtengo P global
+            let tmpG = generador.newTmp();
+            generador.addExpresion(tmpG, 'p', '+', '1');
+            let tmpG1 = generador.newTmp();
+            generador.getFromStack(tmpG1, tmpG);
+            generador.addExpresion(tmp, tmpG1, '+', variable.getPosRelativa());
+        } else { 
+            generador.addExpresion(tmp, 'p', '+', variable.getPosRelativa());
+        }
+
+
         let tmp2 = generador.newTmp();
         generador.getFromStack(tmp2, tmp);
             

@@ -563,7 +563,7 @@ TipoFuncion
     }
     | /*epsilon*/
     {
-        $$ = 11;
+        $$ = 6;
     }
 ;
 
