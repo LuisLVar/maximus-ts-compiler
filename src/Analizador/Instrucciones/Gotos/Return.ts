@@ -14,11 +14,8 @@ export class Return extends Instruccion {
 
   traducir(entorno: Entorno) {
     const generador = Generador.getInstance();
-
-    const tmpRetorno = generador.newTmp();
-    generador.addExpresion(tmpRetorno, 'p');
     let resultado = this.expresion.traducir(entorno);
-    generador.setToStack(tmpRetorno, resultado.getValor());
+    generador.setToStack('p', resultado.getValor());
     generador.addGoto(entorno.retorno);
 
   }

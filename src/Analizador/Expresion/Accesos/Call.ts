@@ -42,26 +42,19 @@ export class Call extends Instruccion {
 
         generador.addComment(`-------  Llamada a la funcion: ${funcion.id} -------`);
         generador.addComment(`-------  Resguardamos Temporales -------`);
-        let activos: Set<string> = new Set(); 
-        let guardados: Set<string> = new Set();
+        let activos: Set<string> = new Set();
+        //let guardados: Set<string> = new Set();
         for (let item of generador.tmpActivos) {
-            if (guardados.has(item)) { 
-                continue;
-            }
             let tmp = generador.newTmp();
             generador.addExpresion(tmp, 'p', '+', entorno.size++);
-            entorno.variables.set("_"+item, new Simbolo(item, Tipo.TEMPORAL, 0, entorno.size - 1, false, this.getLinea(), this.getColumna()));
+            entorno.variables.set("_" + item, new Simbolo(item, Tipo.TEMPORAL, 0, entorno.size - 1, false, this.getLinea(), this.getColumna()));
             generador.setToStack(tmp, item);
             activos.add(item);
-            guardados.add(item);
+            //guardados.add(item);
         }
         generador.addComment(`---------------------------------------`);
         generador.tmpActivos = activos;
 
-        let i = 2;
-        //Cambio simulado de ambito
-        let tmpAmbito = generador.newTmp();
-        generador.addExpresion(tmpAmbito, 'p', '+', entorno.size);
 
 
         generador.addComment("Traduciendo Parametros");
@@ -73,6 +66,11 @@ export class Call extends Instruccion {
             retornos.push(expresion);
         }
 
+        //Cambio simulado de ambito
+        let tmpAmbito = generador.newTmp();
+        generador.addExpresion(tmpAmbito, 'p', '+', entorno.size);
+
+        let i = 2;
         generador.addComment("Asignando Parametros");
         //Asignacion de parametros
         for (let expresion of retornos) {
@@ -102,9 +100,9 @@ export class Call extends Instruccion {
         //Aqui debo recuperar valores.
         console.log(entorno.variables);
         for (let item of generador.tmpActivos) {
-            console.log("_"+item);
+            console.log("_" + item);
             let temporal = entorno.getVariable("_" + item);
-            if (temporal != null) { 
+            if (temporal != null) {
                 let tmp = generador.newTmp();
                 generador.addExpresion(tmp, 'p', '+', temporal.variable.getPosRelativa());
                 generador.getFromStack(item, tmp);
