@@ -63,14 +63,26 @@ export class Call extends Instruccion {
         let tmpAmbito = generador.newTmp();
         generador.addExpresion(tmpAmbito, 'p', '+', entorno.size);
 
-        //Asignacion de parametros
+
+        generador.addComment("Traduciendo Parametros");
+        const retornos: any = new Array();
+        //Traduccion de parametros
+        console.log(this.parametros);
         for (let param of this.parametros) {
+            let expresion = param.traducir(entorno);
+            retornos.push(expresion);
+        }
+
+        generador.addComment("Asignando Parametros");
+        //Asignacion de parametros
+        for (let expresion of retornos) {
             let tmp = generador.newTmp();
             generador.addExpresion(tmp, tmpAmbito, '+', i);
-            let expresion = param.traducir(entorno);
             generador.asignarVariable(tmp, expresion);
             i++;
         }
+
+        generador.addComment("---------------------");
 
         let retorno: Retorno;
 
