@@ -12,7 +12,8 @@ export enum Tipo {
     CONTINUE = 8,
     UNDEFINED = 9,
     RETURN = 10,
-    ANY = 11
+    ANY = 11,
+    TEMPORAL = 12
 }
 
 export const tipoDominante = [

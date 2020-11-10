@@ -738,6 +738,10 @@ F   : PARIZQ Expresion PARDER
     {
         $$ = new Variable($1, @1.first_line, @1.first_column);
     }
+    | NTCall
+    {
+        $$ = $1;
+    }
 ;
 
 Recuperar

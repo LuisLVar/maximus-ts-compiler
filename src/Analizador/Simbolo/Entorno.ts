@@ -49,9 +49,11 @@ export class Entorno {
     let esGlobal = false;
     while (entorno != null) {
       if (entorno.variables.has(id)) {
+        if (entorno.anterior == null) { 
+          esGlobal = true;
+        }
         return { variable: entorno.variables.get(id), global: esGlobal};
       }
-      esGlobal = true;
       entorno = entorno.anterior;
     }
     return null;

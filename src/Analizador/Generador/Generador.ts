@@ -14,10 +14,10 @@ export class Generador {
   private label: number;
   code: string[];
   codeFunciones: string[];
-  private tmpActivos: Set<string>;
+  tmpActivos: Set<string>;
   private temporales: string[];
   estado: number;
-  
+
 
   private constructor() {
     this.temporal = this.label = 0;
@@ -66,11 +66,11 @@ export class Generador {
     return label;
   }
 
-  setCode() { 
+  setCode() {
     let code;
     if (this.estado == codigo.CODE) {
       code = this.code;
-    } else if (this.estado == codigo.FUNCION) { 
+    } else if (this.estado == codigo.FUNCION) {
       code = this.codeFunciones;
     }
     return code;
@@ -87,7 +87,7 @@ export class Generador {
     this.code.push(`double heap[16000];`);
     this.code.push(`double stack[16000];`);
     this.code.push(`double p;`);
-    this.code.push(`double h;`);  
+    this.code.push(`double h;`);
   }
 
   declararTemporales() {
@@ -102,7 +102,7 @@ export class Generador {
     this.code.push(`\nvoid main(){`);
   }
 
-  addMainEnd() { 
+  addMainEnd() {
     this.code.push(`return;`);
     this.code.push(`}`);
   }
@@ -155,11 +155,15 @@ export class Generador {
   addExpresion(asignable: string, left: any, operador: any = '', right: any = '') {
     const code = this.setCode();
     code.push(`${asignable} = ${left} ${operador} ${right};`);
+    this.liberarTmp(left);
+    this.liberarTmp(right);
   }
 
   addModulo(tmp: any, left: any, right: any) {
     const code = this.setCode();
     code.push(`${tmp} = fmod(${left},${right});`);
+    this.liberarTmp(left);
+    this.liberarTmp(right);
   }
 
   addGoto(label: any) {
@@ -170,6 +174,8 @@ export class Generador {
   addIf(left: any, right: any, operador: string, label: string) {
     const code = this.setCode();
     code.push(`if (${left}${operador}${right}) goto ${label};`);
+    this.liberarTmp(left);
+    this.liberarTmp(right);
   }
 
   /* ------------ Declaracion y Asignacion de Variables -------------- */
@@ -177,11 +183,14 @@ export class Generador {
   setToStack(tmp: any, valor: any) {
     const code = this.setCode();
     code.push(`stack[(int)${tmp}]=${valor};`);
+    this.liberarTmp(tmp);
+    this.liberarTmp(valor);
   }
 
   getFromStack(tmp: any, posicion: any) {
     const code = this.setCode();
     code.push(`${tmp} = stack[(int)${posicion}];`);
+    this.liberarTmp(posicion);
   }
 
   declararVariable(tmp: any, valor: Retorno) {
@@ -189,7 +198,6 @@ export class Generador {
       this.addLabel(valor.trueLabel);
       this.setToStack(tmp, '1');
       let label = this.newLabel();
-      this.addGoto(label);
       this.addLabel(valor.falseLabel);
       this.setToStack(tmp, '0');
       this.addLabel(label);
@@ -211,7 +219,6 @@ export class Generador {
       this.addLabel(label);
     } else if (valor.getTipo() == Tipo.STRING) {
       this.setToStack(tmp, valor.getValor());
-
     }
   }
 
@@ -229,11 +236,14 @@ export class Generador {
   getFromHeap(tmp: string, indice: string) {
     const code = this.setCode();
     code.push(`${tmp} = heap[(int)${indice}];`);
+    this.liberarTmp(indice);
   }
 
   setToHeap(indice: string, tmp: string) {
     const code = this.setCode();
     code.push(`heap[(int)${indice}] = ${tmp};`);
+    this.liberarTmp(indice);
+    this.liberarTmp(tmp);
   }
 
   // ---  Booleanos
@@ -263,14 +273,14 @@ export class Generador {
 
 
   // String nativa: dos parametos, dos concatenaciones.
-  nativaPrintString() { 
+  nativaPrintString() {
     this.estado = codigo.FUNCION;
     const code = this.setCode();
     code.push("\n");
     this.addComment("--------- Print String Nativa --------------");
     code.push(`\nvoid _nativaPrintString(){`);
     let tmpParam1 = this.newTmp();
-    this.addExpresion(tmpParam1, 'p', '+', '0');  
+    this.addExpresion(tmpParam1, 'p', '+', '0');
     let label = this.newLabel();
     let tmpH = this.newTmp();
     this.getFromStack(tmpH, tmpParam1);
@@ -298,7 +308,7 @@ export class Generador {
 
 
   // POTENCIA
-  nativaPotencia() { 
+  nativaPotencia() {
     this.estado = codigo.FUNCION;
     const code = this.setCode();
     code.push("\n");
@@ -339,24 +349,27 @@ export class Generador {
 
   // ---------------------------- FUNCIONES -----------------------------
 
-  newFuncion(callID: any, parametros: any) { 
+  newFuncion(callID: any, parametros: any) {
     this.estado = codigo.FUNCION;
     const code = this.setCode();
     code.push("\n");
     this.addComment("--------- Declaracion Funcion --------------");
 
     code.push(`void ${callID}(){`);
-
-
   }
 
-
-  finalizarFuncion() { 
+  finalizarFuncion() {
     const code = this.setCode();
     code.push("}\n");
     this.addComment("--------- Fin Declaracion Funcion  --------------");
     this.estado = codigo.CODE;
   }
+
+  callFuncion(callID: string) {
+    const code = this.setCode();
+    code.push(`${callID}();`);
+  }
+
 
 
 

@@ -14,7 +14,7 @@ export class Funcion extends Instruccion {
 
   public traducir(entorno: Entorno) {
     //Guardamos funcion, validando que exista en su interior.
-    console.log(this);
+    // console.log(this);
 
     let params = "";
     for (let item of this.parametros) {
@@ -46,6 +46,8 @@ export class Funcion extends Instruccion {
     newEntorno.retorno = labelRetorno;
     newEntorno.esFuncion = true;
     this.cuerpo.traducir(newEntorno);
+    generador.addLabel(labelRetorno);
+    generador.codeFunciones.push("return;");
 
     generador.finalizarFuncion();
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { consolaGlobal } from '../salidas/salidas';
+import { consolaGlobal, RaizAST } from '../salidas/salidas';
 import { errores } from '../../../Analizador/Error/Errores';
 import { Error_ } from 'src/Analizador/Error/Error';
 import { Instruccion } from 'src/Analizador/Abstractos/Instruccion';
@@ -10,7 +10,8 @@ import { Generador } from 'src/Analizador/Generador/Generador';
 
 // Ejecucion
 import Parser from '../../../Analizador/Gramatica/gramatica';
-import { Funcion } from 'src/Analizador/Instrucciones/Funciones/Funcion';
+// Generador AST
+import { Traductor } from '../../../Analizador/AST/AST';
 
 
 @Component({
@@ -48,21 +49,6 @@ export class ConsolaComponent implements OnInit {
       //Escribir Funciones Nativas
       generador.nativaPrintString();
       generador.nativaPotencia();
-
-
-      //Escribir Funciones
-      // for (let instruccion of ast) {
-      //   try {
-      //     if (instruccion instanceof Funcion) {
-      //       instruccion.traducir(global);
-      //     }
-      //   } catch (error) {
-      //     console.log(error);
-      //     errores.push(error);
-      //   }
-      // }
-
-      //Escribir Types
 
       //Add Main
       generador.addMain();
@@ -102,6 +88,7 @@ export class ConsolaComponent implements OnInit {
       console.log(error);
       errores.push(error);
     }
+    this.generarASTEjecucion();
   }
 
 
@@ -114,5 +101,11 @@ export class ConsolaComponent implements OnInit {
     this.console.salida = "";
   }
 
+  generarASTEjecucion() { 
+    let ast = Traductor(consolaGlobal.entrada);
+    RaizAST.raiz = ast;
+
+  }
+  
 
 }

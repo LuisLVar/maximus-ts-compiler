@@ -26,7 +26,6 @@ export class ReportesComponent implements OnInit {
   }
 
   generarAST() { 
-    console.log(RaizAST.raiz.nodo);
     this.grafica = `digraph D {
 node [shape=record fontname="Aria" style=filled, fillcolor=azure1];
 nodo0[label="init"];

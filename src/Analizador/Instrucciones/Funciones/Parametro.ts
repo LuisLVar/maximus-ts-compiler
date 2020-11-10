@@ -9,7 +9,7 @@ export class Parametro {
     } else { 
       this.tipoType = new Type(tipo.tipo, null, tipo.dim);
     }
-    console.log(this.tipoType);
+    // onsole.log(this.tipoType);
     
   }
 
