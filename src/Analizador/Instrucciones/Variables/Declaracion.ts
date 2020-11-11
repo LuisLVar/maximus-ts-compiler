@@ -40,7 +40,7 @@ export class Declaracion extends Instruccion {
     generador.addExpresion(tmp, 'p', '+', entorno.size++);
     if (this.valor != null) {
       let expresion = this.valor.traducir(entorno);
-      if (expresion.getTipo() == this.tipo.tipo) {
+      if (expresion.getTipo() == this.tipo.tipo || expresion.getTipo() == Tipo.VOID) {
         if (this.tipo.dim > 0) {
           //Es Array
           let tipoFinal = new Type(Tipo.ARRAY, this.tipo.tipo, this.tipo.dim);

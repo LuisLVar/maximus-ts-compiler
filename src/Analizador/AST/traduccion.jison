@@ -118,7 +118,7 @@ boolean ("true"|"false")
 {id}	                return 'ID';
 
 <<EOF>>		            return 'EOF';
-.					    { errores.push(new Error_(yylloc.first_line, yylloc.first_column, "Léxico", yytext, )); }
+.					    {  }
 
 /lex
 
@@ -312,7 +312,7 @@ Instruccion
     }
     | error Recuperar
     { 
-        errores.push(new Error_(@1.first_line, @1.first_column, "Sintáctico", "Se esperaba: "+ yytext));
+        //errores.push(new Error_(@1.first_line, @1.first_column, "Sintáctico", "Se esperaba: "+ yytext));
     }
 ;
 

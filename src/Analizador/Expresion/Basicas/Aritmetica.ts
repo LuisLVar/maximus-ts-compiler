@@ -52,8 +52,8 @@ export class Aritmetica extends Expresion {
           generador.addExpresion(tmp, leftValue.getValor(), '+', '0');
           generador.addLabel(label);
           result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
-          
-        } else { 
+
+        } else {
           this.resolverNullBoolean(leftValue, rightValue);
           generador.addExpresion(tmp, leftValue.getValor(), '+', rightValue.getValor());
           result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
@@ -86,8 +86,8 @@ export class Aritmetica extends Expresion {
           generador.addLabel(salidaLbl);
           tmpBooleanGlobal = tmpBoolean;
         }
-        
-        if (rightValue.trueLabel != '') { 
+
+        if (rightValue.trueLabel != '') {
           let salidaLbl = generador.newLabel();
           let tmpBoolean = generador.newTmp();
           generador.addLabel(rightValue.trueLabel);
@@ -99,11 +99,63 @@ export class Aritmetica extends Expresion {
           tmpBooleanGlobal = tmpBoolean;
         }
 
+        let tmpNumberRight = generador.newTmp();
+        // Manejo de numeros del lado Derecho
+        if (rightValue.getTipo() == Tipo.NUMBER) {
+          generador.addComment("------ Concatenacion de number reversa ---------");
+
+          let t0 = generador.newTmp();
+          generador.addExpresion(t0, "(int)" + rightValue.getValor());
+
+          let L1 = generador.newLabel();
+          let L2 = generador.newLabel();
+          let L3 = generador.newLabel();
+          let L4 = generador.newLabel();
+          generador.addLabel(L1);
+          generador.addIf(t0, '10', '<', L2);
+          generador.addGoto(L3);
+          generador.addLabel(L2);
+          let tmp0 = generador.newTmp();
+          generador.addExpresion(tmp0, t0, '+', '48');
+          generador.setToHeap('h', tmp0);
+          generador.nextHeap();
+          generador.addGoto(L4);
+          //---------------------------------------
+          generador.addLabel(L3);
+          let t1 = generador.newTmp();
+          let t2 = generador.newTmp();
+          let t3 = generador.newTmp();
+          let t4 = generador.newTmp();
+          generador.addExpresion(t1, "(int) " + t0, '/', '10');
+          generador.addExpresion(t2, t0, '/', '10');
+          generador.addExpresion(t3, t2, '-', t1);
+          generador.addExpresion(t4, t3, '*', '10');
+          let tmp1 = generador.newTmp();
+          generador.addExpresion(tmp1, t4, '+', '48');
+          generador.setToHeap('h', tmp1);
+          generador.nextHeap();
+          generador.addExpresion(t0, t1);
+          generador.addGoto(L1);
+          generador.addLabel(L4);
+          // Termina guardado Al reves
+          generador.setToHeap('h', '-1');
+          generador.nextHeap();
+
+          
+          generador.addExpresion(tmpNumberRight, 'h');
+
+          generador.addComment("------ Fin Concatenacion de number reversa ---------");
+
+        }
+
+
+
+
 
         let tmp = generador.newTmp();
         generador.addExpresion(tmp, 'h');
         if (leftValue.getTipo() == Tipo.STRING) {
-          
+
           let label = generador.newLabel();
           let tmpH = generador.newTmp();
           let tmpRes = generador.newTmp();
@@ -122,16 +174,75 @@ export class Aritmetica extends Expresion {
           generador.addGoto(label);
           generador.addLabel(labelFalse);
 
-        } else if(leftValue.getTipo() == Tipo.NUMBER){  //TODO Enteros y decimales
-          let tmpRes2 = generador.newTmp();
-          generador.addExpresion(tmpRes2, leftValue.getValor());
-          generador.setToHeap('h', tmpRes2);
+        } else if (leftValue.getTipo() == Tipo.NUMBER) {
+
+          generador.addComment("------ Concatenacion de number ---------");
+
+          let t0 = generador.newTmp();
+          generador.addExpresion(t0, "(int)" + leftValue.getValor());
+
+          let L1 = generador.newLabel();
+          let L2 = generador.newLabel();
+          let L3 = generador.newLabel();
+          let L4 = generador.newLabel();
+          generador.addLabel(L1);
+          generador.addIf(t0, '10', '<', L2);
+          generador.addGoto(L3);
+          generador.addLabel(L2);
+          let tmp0 = generador.newTmp();
+          generador.addExpresion(tmp0, t0, '+', '48');
+          generador.setToHeap('h', tmp0);
           generador.nextHeap();
-        } else if (leftValue.getTipo() == Tipo.BOOLEAN) { 
+          generador.addGoto(L4);
+          //---------------------------------------
+          generador.addLabel(L3);
+          let t1 = generador.newTmp();
+          let t2 = generador.newTmp();
+          let t3 = generador.newTmp();
+          let t4 = generador.newTmp();
+          generador.addExpresion(t1, "(int) " + t0, '/', '10');
+          generador.addExpresion(t2, t0, '/', '10');
+          generador.addExpresion(t3, t2, '-', t1);
+          generador.addExpresion(t4, t3, '*', '10');
+          let tmp1 = generador.newTmp();
+          generador.addExpresion(tmp1, t4, '+', '48');
+          generador.setToHeap('h', tmp1);
+          generador.nextHeap();
+          generador.addExpresion(t0, t1);
+          generador.addGoto(L1);
+          generador.addLabel(L4);
+          // Termina guardado Al reves
+          generador.setToHeap('h', '-1');
+          generador.nextHeap();
+
+          // Volvemos a recorrer el numero guardado
+          tmp = generador.newTmp();
+          generador.addExpresion(tmp, 'h');
+          let tn = generador.newTmp();
+          generador.addExpresion(tn, 'h', '-', '2');
+
+          let LabelLoop = generador.newLabel();
+          let label0 = generador.newLabel();
+          let label1 = generador.newLabel();
+          let tR = generador.newTmp();
+          generador.addLabel(LabelLoop);
+          generador.getFromHeap(tR, tn);
+          generador.addIf(tR, '-1', '!=', label0);
+          generador.addGoto(label1);
+          generador.addLabel(label0);
+          generador.setToHeap('h', tR);
+          generador.nextHeap();
+          generador.addExpresion(tn, tn, '-', '1');
+          generador.addGoto(LabelLoop);
+          generador.addLabel(label1);
+
+          generador.addComment("------ Fin Concatenacion de number ---------");
+
+        } else if (leftValue.getTipo() == Tipo.BOOLEAN) {
           let trueLbl = generador.newLabel();
           let falseLabel = generador.newLabel();
           let salidaLbl = generador.newLabel();
-          
+
           generador.addIf(tmpBooleanGlobal, 1, '==', trueLbl);
           generador.addGoto(falseLabel);
           generador.addLabel(trueLbl);
@@ -143,7 +254,7 @@ export class Aritmetica extends Expresion {
         }
 
         if (rightValue.getTipo() == Tipo.STRING) {
-          
+
           let label = generador.newLabel();
           let tmpH = generador.newTmp();
           let tmpRes = generador.newTmp();
@@ -163,16 +274,36 @@ export class Aritmetica extends Expresion {
           generador.addLabel(labelFalse);
 
         } else if (rightValue.getTipo() == Tipo.NUMBER) {
-          let tmpRes2 = generador.newTmp();
-          generador.addExpresion(tmpRes2, rightValue.getValor());
-          generador.setToHeap('h', tmpRes2);
+
+          generador.addComment("------ Concatenacion de number ---------");
+
+          // Volvemos a recorrer el numero guardado
+          let tn = generador.newTmp();
+          generador.addExpresion(tn, tmpNumberRight, '-', '2');
+
+          let LabelLoop = generador.newLabel();
+          let label0 = generador.newLabel();
+          let label1 = generador.newLabel();
+          let tR = generador.newTmp();
+          generador.addLabel(LabelLoop);
+          generador.getFromHeap(tR, tn);
+          generador.addIf(tR, '-1', '!=', label0);
+          generador.addGoto(label1);
+          generador.addLabel(label0);
+          generador.setToHeap('h', tR);
           generador.nextHeap();
-        } else if (rightValue.getTipo() == Tipo.BOOLEAN) { 
+          generador.addExpresion(tn, tn, '-', '1');
+          generador.addGoto(LabelLoop);
+          generador.addLabel(label1);
+
+          generador.addComment("------ Fin Concatenacion de number ---------");
+
+        } else if (rightValue.getTipo() == Tipo.BOOLEAN) {
 
           let trueLbl = generador.newLabel();
           let falseLabel = generador.newLabel();
           let salidaLbl = generador.newLabel();
-          
+
           generador.addIf(tmpBooleanGlobal, 1, '==', trueLbl);
           generador.addGoto(falseLabel);
           generador.addLabel(trueLbl);
@@ -189,9 +320,9 @@ export class Aritmetica extends Expresion {
 
         generador.addComment("------------  Fin Concatenacion ------------");
         result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
-      } else { 
+      } else {
         throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede sumar: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
-      
+
       }
     }
     else if (this.tipo == tipoAritmetica.MENOS) {
@@ -199,7 +330,7 @@ export class Aritmetica extends Expresion {
         this.resolverNullBoolean(leftValue, rightValue);
         generador.addExpresion(tmp, leftValue.getValor(), '-', rightValue.getValor());
         result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
-      } else { 
+      } else {
         throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede restar: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
       }
     }
@@ -208,7 +339,7 @@ export class Aritmetica extends Expresion {
         this.resolverNullBoolean(leftValue, rightValue);
         generador.addExpresion(tmp, leftValue.getValor(), '*', rightValue.getValor());
         result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
-      } else { 
+      } else {
         throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede multiplicar: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
       }
     }
@@ -217,7 +348,7 @@ export class Aritmetica extends Expresion {
         this.resolverNullBoolean(leftValue, rightValue);
         generador.addExpresion(tmp, leftValue.getValor(), '/', rightValue.getValor());
         result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
-      } else { 
+      } else {
         throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede dividir: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
       }
     }
@@ -226,7 +357,7 @@ export class Aritmetica extends Expresion {
         this.resolverNullBoolean(leftValue, rightValue);
         generador.addModulo(tmp, leftValue.getValor(), rightValue.getValor());
         result = new Retorno(tmp, true, new Type(tipoDominante, null, 0));
-      } else { 
+      } else {
         throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede obtener resto de: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
       }
     }
@@ -235,72 +366,72 @@ export class Aritmetica extends Expresion {
         generador.addComment("--------- Inicio Potencia --------------");
         let tmp = generador.newTmp();
         generador.addExpresion(tmp, 'p', '+', '3');  // cambio simulado de ambito
-  
+
         let tmpParam1 = generador.newTmp();
         generador.addExpresion(tmpParam1, tmp, '+', '1');
         generador.setToStack(tmpParam1, leftValue.getValor());
-  
+
         let tmpParam2 = generador.newTmp();
         generador.addExpresion(tmpParam2, tmp, '+', '2');
         generador.setToStack(tmpParam2, rightValue.getValor());
-  
+
         generador.addExpresion('p', 'p', '+', '3');  // Cambio de Ambito
-  
+
         generador.code.push("_nativaPotencia();");
-  
+
         let tmpRI = generador.newTmp();
         generador.addExpresion(tmpRI, 'p');
-  
+
         let tmpR = generador.newTmp();
         generador.getFromStack(tmpR, tmpRI);
-  
+
         generador.addExpresion('p', 'p', '-', '3');  // Cambio de Ambito
         generador.addComment("--------- Fin Potencia --------------");
         result = new Retorno(tmpR, true, new Type(Tipo.NUMBER, null, 0));
 
-      } else { 
+      } else {
         throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'ArithmeticException: No se puede obtener potencia de: ' + entorno.getTipoDato(leftValue.getTipo()) + ' y ' + entorno.getTipoDato(rightValue.getTipo()));
       }
     }
     return result;
   }
 
-  esNull(leftValue : Retorno, rightValue : Retorno) { 
-    if (leftValue.getTipo() == Tipo.NULL) { 
+  esNull(leftValue: Retorno, rightValue: Retorno) {
+    if (leftValue.getTipo() == Tipo.NULL) {
       leftValue.valor = 0;
     }
-    if (rightValue.getTipo() == Tipo.NULL) { 
+    if (rightValue.getTipo() == Tipo.NULL) {
       rightValue.valor = 0;
     }
     return { leftValue, rightValue }
   }
 
-  esBoolean(leftValue : Retorno, rightValue : Retorno) { 
-    if (leftValue.getTipo() == Tipo.BOOLEAN) { 
+  esBoolean(leftValue: Retorno, rightValue: Retorno) {
+    if (leftValue.getTipo() == Tipo.BOOLEAN) {
       if (leftValue.valor == "true") {
         leftValue.valor = 1;
-      } else { 
+      } else {
         leftValue.valor = 0;
       }
     }
-    if (rightValue.getTipo() == Tipo.BOOLEAN) { 
+    if (rightValue.getTipo() == Tipo.BOOLEAN) {
       if (rightValue.valor == "true") {
         rightValue.valor = 1;
-      } else { 
+      } else {
         rightValue.valor = 0;
       }
     }
     return { leftValue, rightValue }
   }
 
-  asignarValores(leftValue: Retorno, rightValue: Retorno, left: Retorno, right: Retorno) { 
+  asignarValores(leftValue: Retorno, rightValue: Retorno, left: Retorno, right: Retorno) {
     leftValue.valor = left.valor;
     leftValue.tipo = left.tipo;
     rightValue.valor = right.valor;
     rightValue.tipo = right.tipo;
   }
 
-  resolverNullBoolean(leftValue: Retorno, rightValue: Retorno) { 
+  resolverNullBoolean(leftValue: Retorno, rightValue: Retorno) {
     let valores = this.esNull(leftValue, rightValue);
     this.asignarValores(leftValue, rightValue, valores.leftValue, valores.rightValue);
     valores = this.esBoolean(leftValue, rightValue);

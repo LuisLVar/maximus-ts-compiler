@@ -200,7 +200,12 @@ case 23: case 24:
         this.$ = { code: $$[$0-1]+$$[$0], nodo: nodoi8 };
     
 break;
-case 26: case 41:
+case 26:
+ 
+        //errores.push(new Error_(_$[$0-1].first_line, _$[$0-1].first_column, "Sintáctico", "Se esperaba: "+ yytext));
+    
+break;
+case 41:
  
         errores.push(new Error_(_$[$0-1].first_line, _$[$0-1].first_column, "Sintáctico", "Se esperaba: "+ yytext));
     
@@ -1948,7 +1953,7 @@ case 65:return 37;
 break;
 case 66:return 5;
 break;
-case 67: errores.push(new Error_(yy_.yylloc.first_line, yy_.yylloc.first_column, "Léxico", yy_.yytext, )); 
+case 67:  
 break;
 }
 },

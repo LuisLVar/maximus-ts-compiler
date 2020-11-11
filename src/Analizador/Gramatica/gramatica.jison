@@ -20,6 +20,11 @@
     const {Call} = require('../Expresion/Accesos/Call');
     const {Parametro} = require('../Instrucciones/Funciones/Parametro');
     const {Return} = require('../Instrucciones/Gotos/Return');
+
+    // Accesos
+    const {AccesoArray} = require('../Expresion/Accesos/AccesoArray');
+    const {NativaString} = require('../Expresion/Accesos/NativaString');
+
     
     
     //Expresiones
@@ -83,6 +88,13 @@ boolean ("true"|"false")
 "type"                  return 'TTYPE'
 "of"                    return 'OF'
 "in"                    return 'IN'
+
+//Funciones Nativas - Accesos
+"charat"                return 'CHARAT'
+"tolowercase"           return 'TOLOWERCASE'
+"touppercase"           return 'TOUPPERCASE'
+"concat"                return 'CONCAT'
+
 
 // "\n\r"                    return "SALTO";
 
@@ -390,6 +402,14 @@ Dim
         $$ = 1;
     }
 ;
+
+
+
+Recuperar
+    : PUNTOYCOMA
+    |
+;
+
 
 Asignacion
     : ID IGUAL Expresion PUNTOYCOMA
@@ -742,9 +762,93 @@ F   : PARIZQ Expresion PARDER
     {
         $$ = $1;
     }
+    | Accesos
+    {
+        $$ = $1;
+    }
 ;
 
-Recuperar
-    : PUNTOYCOMA
+//Accesos pueden ser ID.ID, ID[INDICE], ID.FUNCION();
+
+Accesos
+    : 
+    Accesos PUNTO ID
+    {
+        $$ = new NativaString(null, $3, $1, 4, @1.first_line, @1.first_column);
+    }
     |
+    Acceso
+    {
+        $$ = $1;
+    }
+    | Accesos CORIZQ Expresion CORDER
+    { 
+       $$ = new AccesoArray(null, $3, $1, @1.first_line, @1.first_column);
+    }
+    | Accesos PUNTO CHARAT PARIZQ Expresion PARDER
+    {
+        $$ = new NativaString(null, $5, $1, 0, @1.first_line, @1.first_column);
+    }
+    | Accesos PUNTO TOLOWERCASE PARIZQ PARDER
+    {
+        $$ = new NativaString(null, null, $1, 1, @1.first_line, @1.first_column);
+    }
+    | Accesos PUNTO TOUPPERCASE PARIZQ PARDER
+    {
+        $$ = new NativaString(null, null, $1, 2, @1.first_line, @1.first_column);
+    }
+    | Accesos PUNTO CONCAT PARIZQ Expresion PARDER
+    {
+        $$ = new NativaString(null, $5, $1, 3, @1.first_line, @1.first_column);
+    }
+
 ;
+
+Acceso 
+    : ID PUNTO ID
+    {
+        $$ = new NativaString(new Variable($1, @1.first_line, @1.first_column), $3, null, 4, @1.first_line, @1.first_column);
+    }
+    | STRING PUNTO ID
+    {
+        $$ = new NativaString(new Literal($1, @1.first_line, @1.first_column, 1), $3, null, 4, @1.first_line, @1.first_column);
+    }
+    |  ID CORIZQ Expresion CORDER
+    { 
+       $$ = new AccesoArray($1, $3, null, @1.first_line, @1.first_column);
+    }
+    | ID PUNTO CHARAT PARIZQ Expresion PARDER
+    {
+        $$ = new NativaString(new Variable($1, @1.first_line, @1.first_column), $5, null, 0, @1.first_line, @1.first_column);
+    }
+    | STRING PUNTO CHARAT PARIZQ Expresion PARDER
+    {
+        $$ = new NativaString(new Literal($1, @1.first_line, @1.first_column, 1), $5, null, 0, @1.first_line, @1.first_column);
+    }
+    | ID PUNTO TOLOWERCASE PARIZQ PARDER
+    {
+        $$ = new NativaString(new Variable($1, @1.first_line, @1.first_column), null, null, 1, @1.first_line, @1.first_column);
+    }
+    | STRING PUNTO TOLOWERCASE PARIZQ PARDER
+    {
+        $$ = new NativaString(new Literal($1, @1.first_line, @1.first_column, 1), null, null, 1, @1.first_line, @1.first_column);
+    }
+    | ID PUNTO TOUPPERCASE PARIZQ PARDER
+    {
+        $$ = new NativaString(new Variable($1, @1.first_line, @1.first_column), null, null, 2, @1.first_line, @1.first_column);
+    }
+    | STRING PUNTO TOUPPERCASE PARIZQ PARDER
+    {
+        $$ = new NativaString(new Literal($1, @1.first_line, @1.first_column, 1), null, null, 2, @1.first_line, @1.first_column);
+    }
+    | ID PUNTO CONCAT PARIZQ Expresion PARDER
+    {
+        $$ = new NativaString(new Variable($1, @1.first_line, @1.first_column), $5, null, 3, @1.first_line, @1.first_column);
+    }
+    | STRING PUNTO CONCAT PARIZQ Expresion PARDER
+    {
+        $$ = new NativaString(new Literal($1, @1.first_line, @1.first_column, 1), $5, null, 3, @1.first_line, @1.first_column);
+    }
+
+;
+

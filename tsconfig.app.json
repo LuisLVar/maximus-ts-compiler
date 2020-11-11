@@ -55,6 +55,11 @@
     "src/Analizador/Expresion/Accesos/Call.ts",
     "src/Analizador/Simbolo/SimboloFuncion.ts",
 
+    //Accesos 
+    "src/Analizador/Expresion/Accesos/AccesoArray.ts",
+    "src/Analizador/Expresion/Accesos/NativaString.ts",
+
+
 
   ],
   "include": [
