@@ -30,12 +30,15 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table table-hover table-primary" *ngFor="let tabla of listaTS">
+                            <table class="table table-hover table-primary">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Nombre</th>
+                                        <th scope="col">Pos. Relativa</th>
                                         <th scope="col">Tipo</th>
+                                        <th scope="col">Dimension</th>
+                                        <th scope="col">Heap</th>
                                         <th scope="col">Ambito</th>
                                         <th scope="col">Fila</th>
                                         <th scope="col">Columna</th>
@@ -43,13 +46,16 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <tr *ngFor="let simbolo of tabla;let i=index">
+                                        <tr *ngFor="let simbolo of TS;let i=index">
                                             <th scope="row">{{i+1}}</th>
                                             <td>{{simbolo.nombre}}</td>
+                                            <td>{{simbolo.relativePos}}</td>
                                             <td>{{simbolo.tipo}}</td>
+                                            <td>{{simbolo.dimension}}</td>
+                                            <td>{{simbolo.heap}}</td>
                                             <td>{{simbolo.ambito}}</td>
-                                            <td>{{simbolo.linea.linea}}</td>
-                                            <td>{{simbolo.linea.columna}}</td>
+                                            <td>{{simbolo.linea}}</td>
+                                            <td>{{simbolo.columna}}</td>
                                         </tr>
                                 </tbody>
                             </table>

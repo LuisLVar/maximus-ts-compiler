@@ -9,7 +9,7 @@ export class SimboloFuncion {
   size: number;
   parametros: Array<Parametro>;
 
-  constructor(funcion: Funcion,  callID : string) {
+  constructor(funcion: Funcion,  callID : string, public linea : any, public columna: any) {
       this.tipo = funcion.getTipo();
       this.id = funcion.getID();
       this.size = funcion.parametros.length;

@@ -20,6 +20,8 @@ export class Cuerpo extends Instruccion {
     newEntorno.size = entorno.size;
     newEntorno.retorno = entorno.retorno;
     newEntorno.esFuncion = entorno.esFuncion;
+    console.log("Cuerpo: ");
+    console.log(this.cuerpo);
     for (const instruccion of this.cuerpo) {
       try {
         let retorno;
@@ -27,10 +29,6 @@ export class Cuerpo extends Instruccion {
           retorno = instruccion.traducir(entorno);
         } else { 
           retorno = instruccion.traducir(newEntorno);
-        }
-        
-        if (retorno != null || retorno != undefined) { 
-          return retorno;
         }
       } catch (error) {
         console.log("Entro error");

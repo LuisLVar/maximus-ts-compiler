@@ -13,11 +13,11 @@ export class Variable extends Expresion{
 
     public traducir(entorno: Entorno): Retorno {
         let variableTotal = entorno.getVariable(this.id);
-        let variable = variableTotal.variable;
-        let result: Retorno;
-        if (variable == null) {
+        if (variableTotal == null) {
             throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "La variable '" + this.id + "' no ha sido declarada.");
         }
+        let variable = variableTotal.variable;
+        let result: Retorno;
 
         let tipo = variable.getTipo().getTipo();
         const generador = Generador.getInstance();

@@ -37,7 +37,6 @@ export class Call extends Instruccion {
         // t24=pila[t23]
         // p=p-1   --cambio de ámbito
 
-
         const generador = Generador.getInstance();
 
         generador.addComment(`-------  Llamada a la funcion: ${funcion.id} -------`);
@@ -54,7 +53,6 @@ export class Call extends Instruccion {
         }
         generador.addComment(`---------------------------------------`);
         generador.tmpActivos = activos;
-
 
 
         generador.addComment("Traduciendo Parametros");
@@ -107,7 +105,6 @@ export class Call extends Instruccion {
                 generador.addExpresion(tmp, 'p', '+', temporal.variable.getPosRelativa());
                 generador.getFromStack(item, tmp);
             }
-
         }
 
         generador.addComment("-------------------------------------------------------");

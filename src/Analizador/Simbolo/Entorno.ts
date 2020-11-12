@@ -93,7 +93,7 @@ export class Entorno {
           throw new Error_(linea, columna, 'Semántico', "Error en declaracion: funcion " + id + " ya ha sido declarada.");
         }
       }
-      this.funciones.set(id, new SimboloFuncion(funcion, callID));
+      this.funciones.set(id, new SimboloFuncion(funcion, callID, linea, columna));
     }
   
     public getFuncion(id: string, linea: number, columna: number): SimboloFuncion | undefined {

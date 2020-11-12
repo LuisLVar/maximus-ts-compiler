@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { errores } from '../../../Analizador/Error/Errores';
-import { ListTS, RaizAST } from '../salidas/salidas'
+import { tablaSimbolos, RaizAST } from '../salidas/salidas'
 import { graphviz } from 'd3-graphviz'
 import { wasmFolder } from '@hpcc-js/wasm'
 import { Nodo } from '../../../Analizador/AST/Nodo';
@@ -46,7 +46,7 @@ nodo0 -> nodo${RaizAST.raiz.nodo.getId()};`;
 
 
   listaErrores = errores;
-  listaTS = ListTS;
+  TS = tablaSimbolos;
 
 
 }

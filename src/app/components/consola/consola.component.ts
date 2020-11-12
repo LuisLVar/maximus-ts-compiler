@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { consolaGlobal, RaizAST } from '../salidas/salidas';
+import { consolaGlobal, RaizAST, generarTS, tablaSimbolos } from '../salidas/salidas';
 import { errores } from '../../../Analizador/Error/Errores';
-import { Error_ } from 'src/Analizador/Error/Error';
 import { Instruccion } from 'src/Analizador/Abstractos/Instruccion';
 import { Entorno } from 'src/Analizador/Simbolo/Entorno';
-import { Tipo } from 'src/Analizador/Utils/Tipo';
 
 import { Generador } from 'src/Analizador/Generador/Generador';
 
@@ -31,8 +29,9 @@ export class ConsolaComponent implements OnInit {
 
   traducirCodigo() {
     errores.length = 0;
+    tablaSimbolos.length = 0;
     let ast = Parser.parse(consolaGlobal.entrada);
-    if (errores.length > 0) { 
+    if (errores.length > 0) {
       alert("Compilacion con errores!");
     }
     consolaGlobal.salida = "";
@@ -64,14 +63,14 @@ export class ConsolaComponent implements OnInit {
           errores.push(error);
         }
       }
-      if (errores.length > 0) { 
+      if (errores.length > 0) {
         alert("Compilacion con errores!");
       }
 
       //Incluir temporales
       generador.declararTemporales();
 
-      
+
       //Concluir Main
       generador.addMainEnd();
 
@@ -82,6 +81,7 @@ export class ConsolaComponent implements OnInit {
 
       let code = generador.getCode();
       consolaGlobal.salida = code;
+      generarTS(global);
 
 
     } catch (error) {
@@ -101,11 +101,10 @@ export class ConsolaComponent implements OnInit {
     this.console.salida = "";
   }
 
-  generarASTEjecucion() { 
+  generarASTEjecucion() {
     let ast = Traductor(consolaGlobal.entrada);
     RaizAST.raiz = ast;
 
   }
-  
 
 }

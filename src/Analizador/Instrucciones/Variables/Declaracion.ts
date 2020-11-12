@@ -47,7 +47,11 @@ export class Declaracion extends Instruccion {
           // entorno.declararVariable(this.id, expresion, tipoFinal, this.tipoVariable, this.getLinea(), this.getColumna());
         } else {
           let tipoFinal = new Type(this.tipo.tipo, null, 0);
-          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, false, this.getLinea(), this.getColumna()));
+          let heap: boolean = false;
+          if (tipoFinal.tipo == Tipo.STRING) { 
+            heap = true
+          } 
+          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, heap, this.getLinea(), this.getColumna()));
           generador.declararVariable(tmp, expresion);
         }
   
@@ -79,7 +83,7 @@ export class Declaracion extends Instruccion {
         case Tipo.STRING:
           tipoFinal = new Type(this.tipo.tipo, null, 0);
           expresion = new Retorno('-1', false, tipoFinal);
-          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, false, this.getLinea(), this.getColumna()));
+          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, true, this.getLinea(), this.getColumna()));
           generador.declararVariable(tmp, expresion);
           break;
         case Tipo.TYPE:
