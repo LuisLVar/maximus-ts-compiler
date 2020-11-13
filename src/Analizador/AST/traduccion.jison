@@ -403,7 +403,7 @@ InstruccionF
     }
     | error Recuperar
     { 
-        errores.push(new Error_(@1.first_line, @1.first_column, "Sintáctico", "Se esperaba: "+ yytext));
+        //errores.push(new Error_(@1.first_line, @1.first_column, "Sintáctico", "Se esperaba: "+ yytext));
     }
 ;
 

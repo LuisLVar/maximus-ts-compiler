@@ -20,8 +20,6 @@ export class Cuerpo extends Instruccion {
     newEntorno.size = entorno.size;
     newEntorno.retorno = entorno.retorno;
     newEntorno.esFuncion = entorno.esFuncion;
-    console.log("Cuerpo: ");
-    console.log(this.cuerpo);
     for (const instruccion of this.cuerpo) {
       try {
         let retorno;

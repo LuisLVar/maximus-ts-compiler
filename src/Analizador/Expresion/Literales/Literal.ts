@@ -31,9 +31,7 @@ export class Literal extends Expresion {
 
             let especial: boolean = false;
             for (let caracter of valor) {
-                console.log(caracter);
                 if (caracter.charCodeAt(0) == 92 && !especial) {
-                    console.log("Entro");
                     especial = true;
                     continue;
                 }

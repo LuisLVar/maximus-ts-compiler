@@ -199,7 +199,6 @@ export class NativaString extends Expresion {
           break;
         }
         case Nativa.LENGTH: {
-          console.log(this.indice);
           let cadena: string = this.indice;
           if (cadena.toLowerCase() == "length") {
             generador.addComment("------------  Inicio LENGTH ------------");

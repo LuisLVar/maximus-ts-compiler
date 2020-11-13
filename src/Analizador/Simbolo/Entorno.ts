@@ -87,7 +87,6 @@ export class Entorno {
 
     public guardarFuncion(id: string, funcion: any, callID: string, linea: number, columna: number) {
       let entorno: Entorno | null = this;
-      console.log('entra');
       if (entorno != null) {
         if (entorno.funciones.has(id)) {
           throw new Error_(linea, columna, 'Semántico', "Error en declaracion: funcion " + id + " ya ha sido declarada.");

@@ -30,6 +30,7 @@ export class Relacional extends Expresion {
     //TODO Vadar tipos, diferenciacion y igualacion
 
     if (this.tipo == tipoRelacional.IGUALIGUAL) {
+      generador.addComment("---------- IGUALIGUAL ------------");
 
       if (leftValue.getTipo() == Tipo.BOOLEAN && rightValue.getTipo() == Tipo.BOOLEAN) {
         let tmp = generador.newTmp();
@@ -59,7 +60,56 @@ export class Relacional extends Expresion {
         result.falseLabel = this.falseLabel;
 
 
-      } else {
+      }
+      else if (leftValue.getTipo() == Tipo.STRING && rightValue.getTipo() == Tipo.STRING) { 
+        this.trueLabel = this.trueLabel == '' ? generador.newLabel() : this.trueLabel;
+        this.falseLabel = this.falseLabel == '' ? generador.newLabel() : this.falseLabel;
+
+        let tmp1 = generador.newTmp();
+        let tmp2 = generador.newTmp();
+        let tmph1 = generador.newTmp();
+        let tmph2 = generador.newTmp();
+        let labelV = generador.newLabel();
+        let labelLoop = generador.newLabel();
+        let labelF = generador.newLabel();
+        let labelComodin = generador.newLabel();
+
+        generador.addExpresion(tmp1, leftValue.getValor());
+        generador.addExpresion(tmp2, rightValue.getValor());
+        
+        //IF
+        generador.addIf(tmp1, tmp2, '==', labelV);
+        //generador.addGoto(labelLoop);
+        generador.addLabel(labelLoop);
+
+        generador.getFromHeap(tmph1, tmp1);
+        generador.getFromHeap(tmph2, tmp2);
+
+        generador.addIf(tmph1, tmph2, '==', labelComodin);
+        generador.addGoto(labelF); 
+
+        generador.addLabel(labelComodin);
+        
+        generador.addIf(tmph1, '-1', '==', labelV);
+        generador.addExpresion(tmp1, tmp1, '+', '1');
+        generador.addExpresion(tmp2, tmp2, '+', '1');
+        generador.addGoto(labelLoop);
+
+
+        generador.addLabel(labelV);
+        // Es verdadero
+        generador.addGoto(this.trueLabel)
+
+        generador.addLabel(labelF);
+        // Es Falso
+        generador.addGoto(this.falseLabel);
+
+        result = new Retorno('', false, new Type(Tipo.BOOLEAN, null, 0));
+        result.trueLabel = this.trueLabel;
+        result.falseLabel = this.falseLabel;
+        
+      }
+      else {
         this.trueLabel = this.trueLabel == '' ? generador.newLabel() : this.trueLabel;
         this.falseLabel = this.falseLabel == '' ? generador.newLabel() : this.falseLabel;
         generador.addIf(leftValue.getValor(), rightValue.getValor(), '==', this.trueLabel);
@@ -68,10 +118,12 @@ export class Relacional extends Expresion {
         result.trueLabel = this.trueLabel;
         result.falseLabel = this.falseLabel;
       }
+      generador.addComment("---------- FIN IGUALIGUAL ------------");
 
       return result;
     }
     else if (this.tipo == tipoRelacional.DESIGUAL) {
+      generador.addComment("---------- DESIGUAL ------------");
 
       if (leftValue.getTipo() == Tipo.BOOLEAN && rightValue.getTipo() == Tipo.BOOLEAN) {
         let tmp = generador.newTmp();
@@ -99,7 +151,55 @@ export class Relacional extends Expresion {
         result = new Retorno('', false, new Type(Tipo.BOOLEAN, null, 0));
         result.trueLabel = this.trueLabel;
         result.falseLabel = this.falseLabel;
-      } else {
+      }
+      else if (leftValue.getTipo() == Tipo.STRING && rightValue.getTipo() == Tipo.STRING) { 
+        this.trueLabel = this.trueLabel == '' ? generador.newLabel() : this.trueLabel;
+        this.falseLabel = this.falseLabel == '' ? generador.newLabel() : this.falseLabel;
+
+        let tmp1 = generador.newTmp();
+        let tmp2 = generador.newTmp();
+        let tmph1 = generador.newTmp();
+        let tmph2 = generador.newTmp();
+        let labelV = generador.newLabel();
+        let labelLoop = generador.newLabel();
+        let labelF = generador.newLabel();
+        let labelComodin = generador.newLabel();
+
+        generador.addExpresion(tmp1, leftValue.getValor());
+        generador.addExpresion(tmp2, rightValue.getValor());
+        
+        //IF
+        generador.addLabel(labelLoop);
+
+        generador.getFromHeap(tmph1, tmp1);
+        generador.getFromHeap(tmph2, tmp2);
+
+        generador.addIf(tmph1, tmph2, '==', labelComodin);
+        generador.addGoto(labelF); 
+
+        generador.addLabel(labelComodin);
+        
+        generador.addIf(tmph1, '-1', '==', labelV);
+        generador.addExpresion(tmp1, tmp1, '+', '1');
+        generador.addExpresion(tmp2, tmp2, '+', '1');
+        generador.addGoto(labelLoop);
+
+
+        generador.addLabel(labelV);
+        // Es verdadero
+        generador.addGoto(this.falseLabel)
+
+        generador.addLabel(labelF);
+        // Es Falso
+        generador.addGoto(this.trueLabel);
+
+        result = new Retorno('', false, new Type(Tipo.BOOLEAN, null, 0));
+        result.trueLabel = this.trueLabel;
+        result.falseLabel = this.falseLabel;
+
+
+      }
+      else {
         this.trueLabel = this.trueLabel == '' ? generador.newLabel() : this.trueLabel;
         this.falseLabel = this.falseLabel == '' ? generador.newLabel() : this.falseLabel;
         generador.addIf(leftValue.getValor(), rightValue.getValor(), '!=', this.trueLabel);
@@ -108,6 +208,7 @@ export class Relacional extends Expresion {
         result.trueLabel = this.trueLabel;
         result.falseLabel = this.falseLabel;
       }
+      generador.addComment("---------- FIN DESIGUAL ------------");
       return result;
     }
     else if (this.tipo == tipoRelacional.MAYORQUE) {

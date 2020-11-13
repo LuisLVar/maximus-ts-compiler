@@ -200,14 +200,9 @@ case 23: case 24:
         this.$ = { code: $$[$0-1]+$$[$0], nodo: nodoi8 };
     
 break;
-case 26:
+case 26: case 41:
  
         //errores.push(new Error_(_$[$0-1].first_line, _$[$0-1].first_column, "Sintáctico", "Se esperaba: "+ yytext));
-    
-break;
-case 41:
- 
-        errores.push(new Error_(_$[$0-1].first_line, _$[$0-1].first_column, "Sintáctico", "Se esperaba: "+ yytext));
     
 break;
 case 42:

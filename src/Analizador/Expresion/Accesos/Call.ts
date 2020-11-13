@@ -58,7 +58,6 @@ export class Call extends Instruccion {
         generador.addComment("Traduciendo Parametros");
         const retornos: any = new Array();
         //Traduccion de parametros
-        console.log(this.parametros);
         for (let param of this.parametros) {
             let expresion = param.traducir(entorno);
             retornos.push(expresion);
@@ -96,9 +95,9 @@ export class Call extends Instruccion {
 
         generador.addComment("----------- Recuperacion de temporales ----------------");
         //Aqui debo recuperar valores.
-        console.log(entorno.variables);
+        //console.log(entorno.variables);
         for (let item of generador.tmpActivos) {
-            console.log("_" + item);
+            //console.log("_" + item);
             let temporal = entorno.getVariable("_" + item);
             if (temporal != null) {
                 let tmp = generador.newTmp();
