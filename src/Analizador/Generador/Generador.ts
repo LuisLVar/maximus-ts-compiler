@@ -207,7 +207,12 @@ export class Generador {
       this.addLabel(valor.falseLabel);
       this.setToStack(tmp, '0');
       this.addLabel(label);
-    } else {
+    } else if (valor.getTipo() == Tipo.ARRAY) { 
+      //Agregamos la dimension del arreglo
+      this.setToHeap(valor.getValor(), valor.getType().dim);
+      this.setToStack(tmp, valor.getValor());
+    }
+    else {
       this.setToStack(tmp, valor.getValor());
     }
   }

@@ -39,6 +39,7 @@
     "src/Analizador/Instrucciones/Funciones/Print.ts",
     "src/Analizador/Instrucciones/Variables/Declaracion.ts",
     "src/Analizador/Instrucciones/Variables/Asignacion.ts",
+    "src/Analizador/Instrucciones/Variables/AsignarAcceso.ts",
 
     "src/Analizador/Instrucciones/Control/If.ts",
     "src/Analizador/Instrucciones/Control/Cuerpo.ts",

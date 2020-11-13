@@ -25,7 +25,7 @@ export class NativaString extends Expresion {
     if (this.expresion != null) {
 
       const expresion = this.expresion.traducir(entorno);
-      if (expresion.getTipo() != Tipo.STRING) {
+      if (expresion.getTipo() != Tipo.STRING && expresion.getTipo() != Tipo.ARRAY) {
         throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', 'StringException: la expresion debe ser un String: ' + Tipo[expresion.getTipo()]);
       }
 
@@ -201,31 +201,41 @@ export class NativaString extends Expresion {
         case Nativa.LENGTH: {
           let cadena: string = this.indice;
           if (cadena.toLowerCase() == "length") {
-            generador.addComment("------------  Inicio LENGTH ------------");
-            let expresion = this.expresion.traducir(entorno);
+            if (expresion.getTipo() == Tipo.ARRAY) { 
 
-            let label = generador.newLabel();
-            let tmpH = generador.newTmp();
-            let tmpRes = generador.newTmp();
-            let tmpContador = generador.newTmp();
-            generador.addExpresion(tmpContador, 0);
-            generador.addExpresion(tmpH, expresion.getValor());
-            generador.addLabel(label);
+              let tmpS = generador.newTmp();
+              let tmpH = generador.newTmp();
 
-            let labelTrue = generador.newLabel();
-            let labelFalse = generador.newLabel();
-            generador.getFromHeap(tmpRes, tmpH);
-            generador.addIf(tmpRes, '-1', '!=', labelTrue);
-            generador.addGoto(labelFalse);
-            generador.addLabel(labelTrue);
-            generador.addExpresion(tmpContador, tmpContador, '+', 1);
-            generador.addExpresion(tmpH, tmpH, '+', 1);
-            generador.addGoto(label);
-            generador.addLabel(labelFalse);
-            generador.addComment("------------  Fin LENGTH ------------");
-            retorno = new Retorno(tmpContador, true, new Type(Tipo.NUMBER, null, 0));
+              generador.addExpresion(tmpS, expresion.getValor(), '+', '1');
+              generador.getFromHeap(tmpH, tmpS);
 
+              retorno = new Retorno(tmpH, true, new Type(Tipo.NUMBER, null, 0));
 
+            } else{ 
+              generador.addComment("------------  Inicio LENGTH ------------");
+              let expresion = this.expresion.traducir(entorno);
+  
+              let label = generador.newLabel();
+              let tmpH = generador.newTmp();
+              let tmpRes = generador.newTmp();
+              let tmpContador = generador.newTmp();
+              generador.addExpresion(tmpContador, 0);
+              generador.addExpresion(tmpH, expresion.getValor());
+              generador.addLabel(label);
+  
+              let labelTrue = generador.newLabel();
+              let labelFalse = generador.newLabel();
+              generador.getFromHeap(tmpRes, tmpH);
+              generador.addIf(tmpRes, '-1', '!=', labelTrue);
+              generador.addGoto(labelFalse);
+              generador.addLabel(labelTrue);
+              generador.addExpresion(tmpContador, tmpContador, '+', 1);
+              generador.addExpresion(tmpH, tmpH, '+', 1);
+              generador.addGoto(label);
+              generador.addLabel(labelFalse);
+              generador.addComment("------------  Fin LENGTH ------------");
+              retorno = new Retorno(tmpContador, true, new Type(Tipo.NUMBER, null, 0));
+            }
           } else {
             console.log("Solo se valida el length.");
           }

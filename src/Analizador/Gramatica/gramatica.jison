@@ -5,6 +5,7 @@
     const {Print} = require('../Instrucciones/Funciones/Print');
     const {Declaracion} = require('../Instrucciones/Variables/Declaracion');
     const {Asignacion} = require('../Instrucciones/Variables/Asignacion');
+    const {AsignarAcceso} = require('../Instrucciones/Variables/AsignarAcceso');
     const {If} = require('../Instrucciones/Control/If');
     const {Cuerpo} = require('../Instrucciones/Control/Cuerpo');
     const {While} = require('../Instrucciones/Control/While');
@@ -431,6 +432,30 @@ Asignacion
             new Variable($1, @1.first_line, @1.first_column),
              tipoUnario.DEC, @1.first_line,@1.first_column), @1.first_line,@1.first_column);
     }
+    | AccesosA IGUAL Expresion PUNTOYCOMA
+    {
+        $$ = new AsignarAcceso($1, $3, @1.first_line, @1.first_column);
+    }
+;
+
+AccesosA
+    : AccesosA CORIZQ Expresion CORDER
+    {
+        $1.push({id: '', indice: $3, tipo: 4});
+        $$ = $1;
+    }
+    | AccesoA
+    {
+        $$ = [$1];
+    }
+;
+
+
+AccesoA
+    : ID CORIZQ Expresion CORDER
+    {
+        $$ = {id: $1, indice: $3, tipo: 4}
+    }
 ;
 
 Imprimir
@@ -766,6 +791,10 @@ F   : PARIZQ Expresion PARDER
         $$ = $1;
     }
     | Accesos
+    {
+        $$ = $1;
+    }
+    | valorArray 
     {
         $$ = $1;
     }

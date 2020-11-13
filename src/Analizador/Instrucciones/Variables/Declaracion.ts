@@ -40,11 +40,12 @@ export class Declaracion extends Instruccion {
     generador.addExpresion(tmp, 'p', '+', entorno.size++);
     if (this.valor != null) {
       let expresion = this.valor.traducir(entorno);
-      if (expresion.getTipo() == this.tipo.tipo || expresion.getTipo() == Tipo.VOID) {
+      if (expresion.getTipo() == this.tipo.tipo || expresion.getTipo() == Tipo.VOID || this.tipo.dim > 0) {
         if (this.tipo.dim > 0) {
           //Es Array
           let tipoFinal = new Type(Tipo.ARRAY, this.tipo.tipo, this.tipo.dim);
-          // entorno.declararVariable(this.id, expresion, tipoFinal, this.tipoVariable, this.getLinea(), this.getColumna());
+          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, true, this.getLinea(), this.getColumna()));
+          generador.declararVariable(tmp, expresion);
         } else {
           let tipoFinal = new Type(this.tipo.tipo, null, 0);
           let heap: boolean = false;
