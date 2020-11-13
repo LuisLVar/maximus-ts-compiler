@@ -11,6 +11,8 @@
     const {While} = require('../Instrucciones/Control/While');
     const {DoWhile} = require('../Instrucciones/Control/DoWhile');
     const {For} = require('../Instrucciones/Control/For');
+    const {ForIn} = require('../Instrucciones/Control/ForIn');
+    const {ForOf} = require('../Instrucciones/Control/ForOf');
     const {Break} = require('../Instrucciones/Gotos/Break');
     const {Continue} = require('../Instrucciones/Gotos/Continue');
     const {Switch} = require('../Instrucciones/Control/Switch');
@@ -234,6 +236,14 @@ Instruccion
     {
         $$ = $1;
     }
+    | NTForIn
+    {
+        $$ = $1;
+    }
+    | NTForOf
+    {
+        $$ = $1;
+    }
     | NTSwitch
     {
         $$ = $1;
@@ -295,6 +305,14 @@ InstruccionF
         $$ = $1;
     }
     | NTFor
+    {
+        $$ = $1;
+    }
+    | NTForIn
+    {
+        $$ = $1;
+    }
+    | NTForOf
     {
         $$ = $1;
     }
@@ -527,6 +545,31 @@ NTFor
         $$ = new For($3, $4, $6, $8, @1.first_line, @1.first_column);
     }
 ;
+
+NTForIn
+    : TFOR PARIZQ ID IN Expresion PARDER Cuerpo
+    {
+        $$ = new ForIn($3, null, $5, $7, @1.first_line, @1.first_column);
+    }
+    | TFOR PARIZQ LET ID IN Expresion PARDER Cuerpo
+    {
+        $$ = new ForIn($4, new Declaracion($4, -1, null, 1, @1.first_line, @1.first_column),
+         $6, $8, @1.first_line, @1.first_column);
+    }
+;
+
+NTForOf
+    : TFOR PARIZQ ID OF Expresion PARDER Cuerpo
+    {
+        $$ = new ForOf($3, null, $5, $7, @1.first_line, @1.first_column);
+    }
+    | TFOR PARIZQ LET ID OF Expresion PARDER Cuerpo
+    {
+        $$ = new ForOf($4, new Declaracion($4, -1, null, 1, @1.first_line, @1.first_column),
+         $6, $8, @1.first_line, @1.first_column);
+    }
+;
+
 
 
 AorD

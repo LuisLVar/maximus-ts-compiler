@@ -46,6 +46,8 @@
     "src/Analizador/Instrucciones/Control/While.ts",
     "src/Analizador/Instrucciones/Control/DoWhile.ts",
     "src/Analizador/Instrucciones/Control/For.ts",
+    "src/Analizador/Instrucciones/Control/ForIn.ts",
+    "src/Analizador/Instrucciones/Control/ForOf.ts",
     "src/Analizador/Instrucciones/Gotos/Break.ts",
     "src/Analizador/Instrucciones/Gotos/Continue.ts",
     "src/Analizador/Instrucciones/Control/Switch.ts",
