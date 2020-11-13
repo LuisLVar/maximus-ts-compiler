@@ -33,6 +33,8 @@
     "src/Analizador/Expresion/Basicas/Relacional.ts",
     "src/Analizador/Expresion/Basicas/Logica.ts",
     "src/Analizador/Expresion/NoBinaria/Ternario.ts",
+    "src/Analizador/Expresion/Literales/valorArray.ts",
+    
     //Instrucciones
     "src/Analizador/Instrucciones/Funciones/Print.ts",
     "src/Analizador/Instrucciones/Variables/Declaracion.ts",

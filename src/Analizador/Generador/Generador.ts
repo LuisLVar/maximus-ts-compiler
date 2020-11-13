@@ -149,6 +149,11 @@ export class Generador {
     }
   }
 
+  addPotencia() { 
+    const code = this.setCode();
+    code.push("_nativaPotencia();");
+  }
+
 
   /* -----------    Expresiones  --------------- */
 
@@ -198,6 +203,7 @@ export class Generador {
       this.addLabel(valor.trueLabel);
       this.setToStack(tmp, '1');
       let label = this.newLabel();
+      this.addGoto(label);
       this.addLabel(valor.falseLabel);
       this.setToStack(tmp, '0');
       this.addLabel(label);

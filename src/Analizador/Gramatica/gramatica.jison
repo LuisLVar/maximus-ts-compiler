@@ -30,6 +30,7 @@
     //Expresiones
     const {Variable} = require('../Expresion/Literales/Variable');
     const {Literal} = require('../Expresion/Literales/Literal');
+    const {valorArray} = require('../Expresion/Literales/valorArray');
     const {Aritmetica, tipoAritmetica} = require('../Expresion/Basicas/Aritmetica');
     const {Unario, tipoUnario} = require('../Expresion/NoBinaria/Unario');
     const {Relacional, tipoRelacional} = require('../Expresion/Basicas/Relacional');
@@ -88,6 +89,8 @@ boolean ("true"|"false")
 "type"                  return 'TTYPE'
 "of"                    return 'OF'
 "in"                    return 'IN'
+"new"                   return 'TNEW'
+"array"                 return 'TARRAY'
 
 //Funciones Nativas - Accesos
 "charat"                return 'CHARAT'
@@ -850,5 +853,18 @@ Acceso
         $$ = new NativaString(new Literal($1, @1.first_line, @1.first_column, 1), $5, null, 3, @1.first_line, @1.first_column);
     }
 
+;
+
+valorArray
+    : CORIZQ ListaExp CORDER {
+        $$ = new valorArray($2, null, @1.first_line, @1.first_column);
+    }
+    | CORIZQ CORDER {
+        $$ = new valorArray(new Array(), null, @1.first_line, @1.first_column);
+    }
+    | TNEW TARRAY PARIZQ Expresion PARDER
+    {
+        $$ = new valorArray(new Array(), $4, @1.first_line, @1.first_column);
+    }
 ;
 

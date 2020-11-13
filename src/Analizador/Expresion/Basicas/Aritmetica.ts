@@ -107,6 +107,24 @@ export class Aritmetica extends Expresion {
           let t0 = generador.newTmp();
           generador.addExpresion(t0, "(int)" + rightValue.getValor());
 
+          //---------------------------------------------
+          let LN = generador.newLabel();
+          let LP = generador.newLabel();
+          let LN2 = generador.newLabel();
+          let LP2 = generador.newLabel();
+          let LNX = generador.newLabel();
+          let tN = generador.newTmp();
+          generador.addIf(t0, '0', '<', LN);
+          generador.addGoto(LP);
+          generador.addLabel(LN);
+          generador.addExpresion(tN, '1');
+          generador.addExpresion(t0, t0, '*', '-1');
+          generador.addGoto(LNX);
+          generador.addLabel(LP);
+          generador.addExpresion(tN, '0');
+          generador.addLabel(LNX);
+          // -------------------------------------------------
+
           let L1 = generador.newLabel();
           let L2 = generador.newLabel();
           let L3 = generador.newLabel();
@@ -137,11 +155,18 @@ export class Aritmetica extends Expresion {
           generador.addExpresion(t0, t1);
           generador.addGoto(L1);
           generador.addLabel(L4);
+          generador.addIf(tN, '1', '==', LN2);
+          generador.addGoto(LP2);
+          generador.addLabel(LN2);
+          generador.setToHeap('h', '45');
+          generador.nextHeap();
+          generador.addLabel(LP2);
+
           // Termina guardado Al reves
           generador.setToHeap('h', '-1');
           generador.nextHeap();
 
-          
+
           generador.addExpresion(tmpNumberRight, 'h');
 
           generador.addComment("------ Fin Concatenacion de number reversa ---------");
@@ -180,7 +205,23 @@ export class Aritmetica extends Expresion {
 
           let t0 = generador.newTmp();
           generador.addExpresion(t0, "(int)" + leftValue.getValor());
-
+          //---------------------------------------------
+          let LN = generador.newLabel();
+          let LP = generador.newLabel();
+          let LN2 = generador.newLabel();
+          let LP2 = generador.newLabel();
+          let LNX = generador.newLabel();
+          let tN = generador.newTmp();
+          generador.addIf(t0, '0', '<', LN);
+          generador.addGoto(LP);
+          generador.addLabel(LN);
+          generador.addExpresion(tN, '1');
+          generador.addExpresion(t0, t0, '*', '-1');
+          generador.addGoto(LNX);
+          generador.addLabel(LP);
+          generador.addExpresion(tN, '0');
+          generador.addLabel(LNX);
+          // -------------------------------------------------
           let L1 = generador.newLabel();
           let L2 = generador.newLabel();
           let L3 = generador.newLabel();
@@ -211,6 +252,14 @@ export class Aritmetica extends Expresion {
           generador.addExpresion(t0, t1);
           generador.addGoto(L1);
           generador.addLabel(L4);
+
+          generador.addIf(tN, '1', '==', LN2);
+          generador.addGoto(LP2);
+          generador.addLabel(LN2);
+          generador.setToHeap('h', '45');
+          generador.nextHeap();
+          generador.addLabel(LP2);
+
           // Termina guardado Al reves
           generador.setToHeap('h', '-1');
           generador.nextHeap();
@@ -377,7 +426,7 @@ export class Aritmetica extends Expresion {
 
         generador.addExpresion('p', 'p', '+', '3');  // Cambio de Ambito
 
-        generador.code.push("_nativaPotencia();");
+        generador.addPotencia();
 
         let tmpRI = generador.newTmp();
         generador.addExpresion(tmpRI, 'p');
