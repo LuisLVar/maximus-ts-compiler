@@ -88,18 +88,18 @@ export class Entorno {
     public guardarFuncion(id: string, funcion: any, callID: string, linea: number, columna: number) {
       let entorno: Entorno | null = this;
       if (entorno != null) {
-        if (entorno.funciones.has(id)) {
+        if (entorno.funciones.has(id.toLowerCase())) {
           throw new Error_(linea, columna, 'Semántico', "Error en declaracion: funcion " + id + " ya ha sido declarada.");
         }
       }
-      this.funciones.set(id, new SimboloFuncion(funcion, callID, linea, columna));
+      this.funciones.set(id.toLowerCase(), new SimboloFuncion(funcion, callID, linea, columna));
     }
   
     public getFuncion(id: string, linea: number, columna: number): SimboloFuncion | undefined {
       let entorno: Entorno | null = this;
       while (entorno != null) {
-        if (entorno.funciones.has(id)) {
-          return entorno.funciones.get(id);
+        if (entorno.funciones.has(id.toLowerCase())) {
+          return entorno.funciones.get(id.toLowerCase());
         }
         entorno = entorno.anterior;
       }

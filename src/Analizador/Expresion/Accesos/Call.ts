@@ -16,7 +16,7 @@ export class Call extends Instruccion {
 
     public traducir(entorno: Entorno): Retorno {
         // console.log("Entro a un call");
-        const funcion: SimboloFuncion = entorno.getFuncion(this.id, this.getLinea(), this.getColumna());
+        const funcion: SimboloFuncion = entorno.getFuncion(this.id.toLocaleLowerCase(), this.getLinea(), this.getColumna());
         // console.log(funcion);
 
         //Funciones sin retorno, sencillas

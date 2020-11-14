@@ -22,7 +22,7 @@ export class Funcion extends Instruccion {
     }
 
     const callID = `proc_${this.id}${params}`;
-    entorno.guardarFuncion(this.id, this, callID, this.getLinea(), this.getColumna());
+    entorno.guardarFuncion(this.id.toLowerCase(), this, callID, this.getLinea(), this.getColumna());
 
     //Guardar parametros
     const newEntorno = new Entorno(entorno);
