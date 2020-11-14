@@ -20,6 +20,7 @@ export class DoWhile extends Instruccion {
     newEntorno.break = this.condicion.falseLabel = generador.newLabel();
     newEntorno.size = entorno.size;
     newEntorno.esFuncion = entorno.esFuncion;
+    newEntorno.retorno = entorno.retorno;
     generador.addLabel(this.condicion.trueLabel);
     this.cuerpo.traducir(newEntorno);
     const condicion = this.condicion.traducir(entorno);

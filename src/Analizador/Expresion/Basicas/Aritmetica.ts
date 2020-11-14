@@ -414,7 +414,7 @@ export class Aritmetica extends Expresion {
       if (leftValue.getTipo() == Tipo.NUMBER && rightValue.getTipo() == Tipo.NUMBER) {
         generador.addComment("--------- Inicio Potencia --------------");
         let tmp = generador.newTmp();
-        generador.addExpresion(tmp, 'p', '+', '3');  // cambio simulado de ambito
+        generador.addExpresion(tmp, 'p', '+', entorno.size);  // cambio simulado de ambito
 
         let tmpParam1 = generador.newTmp();
         generador.addExpresion(tmpParam1, tmp, '+', '1');
@@ -424,7 +424,7 @@ export class Aritmetica extends Expresion {
         generador.addExpresion(tmpParam2, tmp, '+', '2');
         generador.setToStack(tmpParam2, rightValue.getValor());
 
-        generador.addExpresion('p', 'p', '+', '3');  // Cambio de Ambito
+        generador.addExpresion('p', 'p', '+', entorno.size);  // Cambio de Ambito
 
         generador.addPotencia();
 
@@ -434,7 +434,7 @@ export class Aritmetica extends Expresion {
         let tmpR = generador.newTmp();
         generador.getFromStack(tmpR, tmpRI);
 
-        generador.addExpresion('p', 'p', '-', '3');  // Cambio de Ambito
+        generador.addExpresion('p', 'p', '-', entorno.size);  // Cambio de Ambito
         generador.addComment("--------- Fin Potencia --------------");
         result = new Retorno(tmpR, true, new Type(Tipo.NUMBER, null, 0));
 

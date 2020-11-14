@@ -6,6 +6,7 @@ import { Retorno } from "../../Utils/Retorno";
 import { Error_ } from "../../Error/Error";
 import { Generador } from 'src/Analizador/Generador/Generador';
 import { Simbolo } from 'src/Analizador/Simbolo/Simbolo';
+import { CompileShallowModuleMetadata } from "@angular/compiler";
 
 
 export enum tipoDeclaracion {
@@ -16,10 +17,10 @@ export enum tipoDeclaracion {
 
 export class Declaracion extends Instruccion {
 
-  private id: string;
-  private valor: Expresion;
-  private tipo: any;
-  private tipoVariable: tipoDeclaracion;
+  public id: string;
+  public valor: Expresion;
+  public tipo: any;
+  public tipoVariable: tipoDeclaracion;
 
   constructor(id: string, tipo: any, valor: Expresion, tipoVariable: tipoDeclaracion, linea: number, columna: number) {
     super(linea, columna);
@@ -40,30 +41,41 @@ export class Declaracion extends Instruccion {
     generador.addExpresion(tmp, 'p', '+', entorno.size++);
     if (this.valor != null) {
       let expresion = this.valor.traducir(entorno);
-      if (expresion.getTipo() == this.tipo.tipo || expresion.getTipo() == Tipo.VOID || this.tipo.dim > 0) {
+      if (expresion.getTipo() == this.tipo.tipo || expresion.getTipo() == Tipo.VOID || this.tipo.dim > 0 || this.tipo.tipo == Tipo.ANY) {
         if (this.tipo.dim > 0) {
           //Es Array
+
+          generador.setToHeap(expresion.getValor(), this.tipo.dim);
+
           let tipoFinal = new Type(Tipo.ARRAY, this.tipo.tipo, this.tipo.dim);
           entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, true, this.getLinea(), this.getColumna()));
           generador.declararVariable(tmp, expresion);
-        } else {
+        } 
+        else {
           let tipoFinal = new Type(this.tipo.tipo, null, 0);
           let heap: boolean = false;
-          if (tipoFinal.tipo == Tipo.STRING) { 
+          if (tipoFinal.tipo == Tipo.STRING) {
             heap = true
-          } 
+          }
           entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, heap, this.getLinea(), this.getColumna()));
           generador.declararVariable(tmp, expresion);
         }
-  
+
       } else {
         throw new Error_(this.getLinea(), this.getColumna(), 'Semántico', "Error en declaracion: " +
           entorno.getTipoDato(expresion.getTipo()) + " no es asignable a " + entorno.getTipoDato(this.tipo.tipo));
       }
-    } else { 
-      let tipoFinal : Type;
-      let expresion : Retorno;
-      switch (this.tipo.tipo) { 
+    } else {
+      let tipoFinal: Type;
+      let expresion: Retorno;
+
+
+      let tipo = this.tipo.tipo;
+      if (this.tipo.dim > 0) { 
+        tipo = Tipo.ARRAY;
+      }
+
+      switch (tipo) {
         case Tipo.NUMBER:
           tipoFinal = new Type(this.tipo.tipo, null, 0);
           expresion = new Retorno('0', false, tipoFinal);
@@ -90,6 +102,10 @@ export class Declaracion extends Instruccion {
         case Tipo.TYPE:
           break;
         case Tipo.ARRAY:
+          tipoFinal = new Type(Tipo.ARRAY, this.tipo.tipo, this.tipo.dim);
+          expresion = new Retorno('-1', false, tipoFinal);
+          entorno.variables.set(this.id, new Simbolo(this.id, tipoFinal, this.tipoVariable, entorno.size - 1, true, this.getLinea(), this.getColumna()));
+          generador.declararVariable(tmp, expresion);
           break;
       }
     }

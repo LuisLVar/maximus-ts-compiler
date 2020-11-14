@@ -32,9 +32,9 @@ export class Case extends Instruccion {
     for (const instruccion of this.cuerpo) {
       try {
         const retorno = instruccion.traducir(entorno);
-        if (retorno != null || retorno != undefined) { 
-          return retorno;
-        }
+        // if (retorno != null || retorno != undefined) { 
+        //   return retorno;
+        // }
       } catch (error) {
         errores.push(error);
       }

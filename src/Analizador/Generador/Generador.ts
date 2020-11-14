@@ -209,7 +209,6 @@ export class Generador {
       this.addLabel(label);
     } else if (valor.getTipo() == Tipo.ARRAY) { 
       //Agregamos la dimension del arreglo
-      this.setToHeap(valor.getValor(), valor.getType().dim);
       this.setToStack(tmp, valor.getValor());
     }
     else {

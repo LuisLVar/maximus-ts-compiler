@@ -553,7 +553,7 @@ NTForIn
     }
     | TFOR PARIZQ LET ID IN Expresion PARDER Cuerpo
     {
-        $$ = new ForIn($4, new Declaracion($4, -1, null, 1, @1.first_line, @1.first_column),
+        $$ = new ForIn($4, new Declaracion($4, { tipo: 0, dim: 0 }, null, 1, @1.first_line, @1.first_column),
          $6, $8, @1.first_line, @1.first_column);
     }
 ;
@@ -565,7 +565,7 @@ NTForOf
     }
     | TFOR PARIZQ LET ID OF Expresion PARDER Cuerpo
     {
-        $$ = new ForOf($4, new Declaracion($4, -1, null, 1, @1.first_line, @1.first_column),
+        $$ = new ForOf($4, new Declaracion($4, { tipo: 11, dim: 0 }, null, 1, @1.first_line, @1.first_column),
          $6, $8, @1.first_line, @1.first_column);
     }
 ;
@@ -648,9 +648,9 @@ NTFuncion
 ;
 
 TipoFuncion
-    : DOSPUNTOS Tipo
+    : DOSPUNTOS Tipo Dimensiones
     {
-        $$ = $2;
+        $$ = { tipo: $2, dim: $3};
     }
     | /*epsilon*/
     {

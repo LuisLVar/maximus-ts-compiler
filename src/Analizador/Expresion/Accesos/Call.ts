@@ -84,12 +84,18 @@ export class Call extends Instruccion {
         //Cambio de ambito
         generador.addExpresion('p', 'p', '+', entorno.size);
         generador.callFuncion(funcion.callID);
-        if (funcion.tipo != Tipo.VOID) {
+        if (funcion.tipo == Tipo.VOID) {
+            retorno = new Retorno('0', false, new Type(Tipo.VOID, null, 0));
+        }
+        else if (funcion.tipo == Tipo.ARRAY) { 
+            let tmp = generador.newTmp();
+            generador.getFromStack(tmp, 'p');
+            retorno = new Retorno(tmp, true, new Type(funcion.tipo, funcion.tipoArray, funcion.dim));
+        }
+        else {
             let tmp = generador.newTmp();
             generador.getFromStack(tmp, 'p');
             retorno = new Retorno(tmp, true, new Type(funcion.tipo, null, 0));
-        } else {
-            retorno = new Retorno('0', false, new Type(Tipo.VOID, null, 0));
         }
         generador.addExpresion('p', 'p', '-', entorno.size);
 

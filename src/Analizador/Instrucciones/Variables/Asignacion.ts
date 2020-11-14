@@ -44,6 +44,7 @@ export class Asignacion extends Instruccion {
 
     let expresion = this.valor.traducir(entorno);
     let tipoType = variable.getTipo();
+    console.log(tipoType);
     let tipo = tipoType.tipo;
 
     if (variable == undefined) { 

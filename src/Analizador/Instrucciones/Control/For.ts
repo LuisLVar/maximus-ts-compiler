@@ -17,19 +17,20 @@ export class For extends Instruccion {
     console.log("Entro For");
     const generador = Generador.getInstance();
     const newEntorno = new Entorno(entorno);
+    newEntorno.size = entorno.size;
+    newEntorno.esFuncion = entorno.esFuncion;
+    newEntorno.retorno = entorno.retorno;
     const labelFor = generador.newLabel();
     generador.addComment(' --------- Estructura de Control: For ----------');
     this.declaracion.traducir(newEntorno);
     generador.addLabel(labelFor);
     let condicion = this.condicion.traducir(newEntorno);
+    newEntorno.break = condicion.falseLabel;
+    newEntorno.continue = labelFor;
     if (condicion.getTipo() != Tipo.BOOLEAN) {
       throw new Error_(this.getLinea(), this.getColumna(), "Semántico",
         "Error While: Tipo incorrecto de condicion -> " + entorno.getTipoDato(condicion.getTipo()) + ", se esperaba Boolean.");
     } else { 
-      newEntorno.break = condicion.falseLabel;
-      newEntorno.continue = labelFor;
-      newEntorno.size = entorno.size;
-      newEntorno.esFuncion = entorno.esFuncion;
       generador.addLabel(condicion.trueLabel);
       this.cuerpo.traducir(newEntorno);
       this.asignacion.traducir(newEntorno);

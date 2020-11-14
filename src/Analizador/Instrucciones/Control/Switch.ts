@@ -18,6 +18,8 @@ export class Switch extends Instruccion {
   }
 
   public traducir(entorno: Entorno) {
+    const generador = Generador.getInstance();
+    generador.addComment("-------------- INICIO SWITCH -------------------");
     const expresion = this.condicion.traducir(entorno);
     const newEntorno = new Entorno(entorno);
     let casesLocales = new Array();
@@ -38,7 +40,7 @@ export class Switch extends Instruccion {
       }
     }
 
-    const generador = Generador.getInstance();
+
     let label1;
     let label2;
     let labelBreak = generador.newLabel();
@@ -72,6 +74,7 @@ export class Switch extends Instruccion {
     }
 
     //Break
+    generador.addComment("-------------- FIN SWITCH -------------------");
     generador.addLabel(labelBreak);
 
 

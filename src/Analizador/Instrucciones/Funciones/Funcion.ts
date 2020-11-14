@@ -59,7 +59,11 @@ export class Funcion extends Instruccion {
   }
 
   getTipo() {
-    return this.tipo;
+    return this.tipo.tipo;
+  }
+
+  getDimension() {
+    return this.tipo.dim;
   }
 
   getID() {
