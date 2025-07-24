@@ -1,27 +1,40 @@
 # MaximusTS
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.6.
+This project is a compiler focused on generating and executing Three-Address Code (C3D).
 
-## Development server
+**Author:** Luis Vargas
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Description
 
-## Code scaffolding
+MaximusTS is built with Angular and provides a web console where you can write code, translate it into C3D and run the result. Its main components include:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Console**: interface to enter code, view the C3D translation and clear the output.
+- **Reports**: placeholder section for symbol table and AST reports (in development).
+- **Outputs**: defines the structures that store the input, translation and console result.
 
-## Build
+The integrated editor is based on CodeMirror to provide syntax highlighting and a friendly editing experience.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Installation
 
-## Running unit tests
+1. Install project dependencies:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+   ```bash
+   npm install
+   ```
 
-## Running end-to-end tests
+2. Run the development server:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+   ```bash
+   ng serve
+   ```
 
-## Further help
+   Then open `http://localhost:4200/` in your browser.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Project Structure
+
+The source code is in the `src/app` folder and organized by components. The `salidas.ts` file maintains the shared state for the console and translation. Necessary Angular modules are defined in `app.module.ts`.
+
+## License
+
+This project is distributed without a specific license and may be used for academic or personal purposes.
+
